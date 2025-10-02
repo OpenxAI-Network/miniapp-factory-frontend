@@ -41,14 +41,14 @@ const pages = [
 export function Header() {
   return (
     <>
-      <header className="flex place-items-center gap-4 border-b p-4 max-md:hidden">
+      <header className="sticky flex place-items-center gap-4 border-b p-4 max-md:hidden">
         {pages.map((page, i) => (
           <Link key={i} href={page.href}>
             {page.label}
           </Link>
         ))}
       </header>
-      <header className="flex place-content-between border-b p-4 md:hidden">
+      <header className="sticky flex place-content-between border-b p-4 md:hidden">
         <Link href="/">{pages.find((page) => page.href === "/")?.label}</Link>
         {pages.length > 1 && (
           <Drawer>
