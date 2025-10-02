@@ -3,10 +3,12 @@
 import { useMiniAppContext } from "./context/miniapp-provider";
 import { Button } from "./ui/button";
 
-export const dynamic = "force-dynamic";
-
 export function Share({ text }: { text: string }) {
-  const { sdk } = useMiniAppContext();
+  const { sdk, isInMiniApp } = useMiniAppContext();
+
+  if (!isInMiniApp) {
+    return <></>;
+  }
 
   return (
     <Button

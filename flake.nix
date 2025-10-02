@@ -1,5 +1,5 @@
 {
-  description = "Mini app running on Xnode!";
+  description = "Web interface for Mini App Factory.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";

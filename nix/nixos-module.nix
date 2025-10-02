@@ -5,12 +5,12 @@
   ...
 }:
 let
-  cfg = config.services.xnode-miniapp-template;
-  xnode-miniapp-template = pkgs.callPackage ./package.nix { };
+  cfg = config.services.miniapp-factory-frontend;
+  miniapp-factory-frontend = pkgs.callPackage ./package.nix { };
 in
 {
   options = {
-    services.xnode-miniapp-template = {
+    services.miniapp-factory-frontend = {
       enable = lib.mkEnableOption "Enable the nextjs app";
 
       hostname = lib.mkOption {
@@ -79,15 +79,15 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    users.groups.xnode-miniapp-template = { };
-    users.users.xnode-miniapp-template = {
+    users.groups.miniapp-factory-frontend = { };
+    users.users.miniapp-factory-frontend = {
       isSystemUser = true;
-      group = "xnode-miniapp-template";
+      group = "miniapp-factory-frontend";
     };
 
-    systemd.services.xnode-miniapp-template = {
+    systemd.services.miniapp-factory-frontend = {
       wantedBy = [ "multi-user.target" ];
-      description = "Mini App.";
+      description = "Web interface for Mini App Factory.";
       after = [ "network.target" ];
       environment = {
         HOSTNAME = cfg.hostname;
@@ -96,9 +96,9 @@ in
         NEXT_PUBLIC_ACCOUNT_ASSOCIATION = builtins.toJSON cfg.accountAssociation;
       };
       serviceConfig = {
-        ExecStart = "${lib.getExe xnode-miniapp-template}";
-        User = "xnode-miniapp-template";
-        Group = "xnode-miniapp-template";
+        ExecStart = "${lib.getExe miniapp-factory-frontend}";
+        User = "miniapp-factory-frontend";
+        Group = "miniapp-factory-frontend";
         CacheDirectory = "mini-app";
       };
     };

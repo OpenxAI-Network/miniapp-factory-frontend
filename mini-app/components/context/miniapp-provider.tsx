@@ -7,10 +7,12 @@ import { MiniAppSDK } from "@farcaster/miniapp-sdk/dist/types";
 export interface MiniAppContext {
   sdk: MiniAppSDK;
   context: Context.MiniAppContext | undefined;
+  isInMiniApp: boolean | undefined;
 }
 const defaultSettings: MiniAppContext = {
   sdk,
   context: undefined,
+  isInMiniApp: undefined,
 };
 const MiniAppContext = createContext<MiniAppContext>(defaultSettings);
 
@@ -27,6 +29,15 @@ export function MiniAppProvider({ children }: { children: React.ReactNode }) {
             })
           )
           .catch(console.error),
+        context.sdk
+          .isInMiniApp()
+          .then((isInMiniApp) =>
+            setContext((oldContext) => {
+              return { ...oldContext, isInMiniApp };
+            })
+          )
+          .catch(console.error),
+        ,
       ]);
 
       await context.sdk.actions.ready().catch(console.error);

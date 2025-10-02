@@ -1,8 +1,8 @@
 {
   inputs = {
     xnode-manager.url = "github:Openmesh-Network/xnode-manager";
-    xnode-miniapp-template.url = "github:OpenxAI-Network/xnode-miniapp-template"; # "path:..";
-    nixpkgs.follows = "xnode-miniapp-template/nixpkgs";
+    miniapp-factory-frontend.url = "github:OpenxAI-Network/miniapp-factory-frontend";
+    nixpkgs.follows = "miniapp-factory-frontend/nixpkgs";
   };
 
   outputs = inputs: {
@@ -19,10 +19,10 @@
             hostname = ./xnode-config/hostname;
           };
         }
-        inputs.xnode-miniapp-template.nixosModules.default
+        inputs.miniapp-factory-frontend.nixosModules.default
         {
-          services.xnode-miniapp-template.enable = true;
-          services.xnode-miniapp-template.url = "http://localhost:3000";
+          services.miniapp-factory-frontend.enable = true;
+          services.miniapp-factory-frontend.url = "https://miniapp-factory.marketplace.openxai.network";
         }
       ];
     };

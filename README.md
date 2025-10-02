@@ -1,6 +1,6 @@
-## Xnode Mini App Template
+## Mini App Factory Frontend
 
-Template to make your mini app Xnode/Nix compatible.
+Web interface for Mini App Factory.
 
 ## Commands (in root folder)
 

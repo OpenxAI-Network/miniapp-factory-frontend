@@ -2,7 +2,9 @@ import { Share } from "@/components/share";
 import { Button } from "@/components/ui/button";
 import { description, title } from "@/lib/metadata";
 import { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
+import Icon from "@/public/icon.png";
 
 export const dynamic = "force-dynamic";
 
@@ -38,18 +40,29 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function Home() {
   return (
-    <main className="flex flex-col gap-3 row-start-2 place-content-center place-items-center justify-center">
-      <span className="text-2xl">Xnode Mini App Template</span>
-      <span className="text-muted-foreground">Mini app running on Xnode!</span>
-      <Button asChild>
-        <Link href="/auth">Authenticate</Link>
-      </Button>
-      <Button asChild>
-        <Link href="/farcaster-info">Farcaster Info</Link>
-      </Button>
-      <Share
-        text={`Check out this mini app template! ${process.env.NEXT_PUBLIC_URL}`}
+    <main className="flex flex-col gap-8 place-items-center px-4">
+      <div className="flex flex-col gap-1 place-items-center text-center">
+        <span className="text-2xl">Mini App Factory</span>
+        <span className="text-muted-foreground">
+          AI-powered application to allow creation of Farcaster mini apps with
+          natural language.
+        </span>
+      </div>
+      <Image
+        className="size-[200px]"
+        src={Icon}
+        alt="icon"
+        width={200}
+        height={200}
       />
+      <div className="flex flex-col gap-3">
+        <Button asChild>
+          <Link href="/factory">Enter the factory</Link>
+        </Button>
+        <Share
+          text={`Create your own Farcaster mini app in seconds! ${process.env.NEXT_PUBLIC_URL}`}
+        />
+      </div>
     </main>
   );
 }

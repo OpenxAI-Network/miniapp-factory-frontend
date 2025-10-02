@@ -1,2 +1,3 @@
-export const title = "Xnode Mini App Template";
-export const description = "Mini app running on Xnode!";
+export const title = "Mini App Factory";
+export const description =
+  "AI-powered application to allow creation of Farcaster mini apps with natural language.";

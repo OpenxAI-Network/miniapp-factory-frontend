@@ -33,12 +33,8 @@ const pages = [
     href: "/",
   },
   {
-    label: <span className="text-lg">Auth</span>,
-    href: "/auth",
-  },
-  {
-    label: <span className="text-lg">Info</span>,
-    href: "/farcaster-info",
+    label: <span className="text-lg">Factory</span>,
+    href: "/factory",
   },
 ];
 
