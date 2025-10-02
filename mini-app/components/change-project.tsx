@@ -26,6 +26,7 @@ export function ChangeProject({ project }: { project: string }) {
             },
             body: JSON.stringify({ project, instructions }),
           })
+            .then(() => setInstructions(""))
             .catch(console.error)
             .finally(() => setProcessing(false));
         }}
