@@ -57,6 +57,11 @@ export function MyProjects({ user }: { user: string | null }) {
             <Label htmlFor="miniapp-project-name">Project Name</Label>
             <Input
               id="miniapp-project-name"
+              aria-invalid={
+                !new RegExp(/^[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?$/).test(
+                  projectName
+                )
+              }
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
             />
@@ -75,9 +80,16 @@ export function MyProjects({ user }: { user: string | null }) {
                   },
                   body: JSON.stringify({ project: projectName }),
                 })
-                  .then(() => router.push(`/factory/${projectName}`))
+                  .then(() => {
+                    router.push(`/factory/${projectName}`);
+                  })
                   .catch(console.error);
               }}
+              disabled={
+                !new RegExp(/^[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?$/).test(
+                  projectName
+                )
+              }
             >
               Create
             </Button>

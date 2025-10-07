@@ -21,6 +21,14 @@ export default async function Project({
           >
             View Mini App
           </Link>
+          <Button asChild>
+            <Link
+              href={`https://github.com/miniapp-factory/${project}`}
+              target="_blank"
+            >
+              View On GitHub
+            </Link>
+          </Button>
         </Button>
         <Share
           text={`Checkout this app I created using OpenxAI's #MiniAppFactory! https://${project}.miniapp-factory.marketplace.openxai.network \nCreate your own app at https://miniapp-factory.marketplace.openxai.network`}
