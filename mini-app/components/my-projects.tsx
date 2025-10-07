@@ -32,6 +32,7 @@ export function MyProjects({ user }: { user: string | null }) {
   });
 
   const [projectName, setProjectName] = useState<string>("");
+  const [creatingProject, setCreatingProject] = useState<boolean>(false);
   const router = useRouter();
 
   return (
@@ -72,6 +73,7 @@ export function MyProjects({ user }: { user: string | null }) {
             </DialogClose>
             <Button
               onClick={() => {
+                setCreatingProject(true);
                 fetch("/api/factory/project/create", {
                   method: "POST",
                   headers: {
@@ -80,12 +82,16 @@ export function MyProjects({ user }: { user: string | null }) {
                   },
                   body: JSON.stringify({ project: projectName }),
                 })
-                  .then(() => {
-                    router.push(`/factory/${projectName}`);
+                  .then((res) => {
+                    if (res.ok) {
+                      router.push(`/factory/${projectName}`);
+                    }
                   })
-                  .catch(console.error);
+                  .catch(console.error)
+                  .finally(() => setCreatingProject(false));
               }}
               disabled={
+                creatingProject ||
                 !new RegExp(/^[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?$/).test(
                   projectName
                 )
