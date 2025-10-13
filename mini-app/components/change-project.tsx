@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function ChangeProject({ project }: { project: string }) {
   const [instructions, setInstructions] = useState<string>("");
   const [processing, setProcessing] = useState<boolean>(false);
+  const queryClient = useQueryClient();
 
   return (
     <div className="flex flex-col gap-3 place-items-center">
@@ -26,7 +28,10 @@ export function ChangeProject({ project }: { project: string }) {
             },
             body: JSON.stringify({ project, instructions }),
           })
-            .then(() => setInstructions(""))
+            .then(() => {
+              setInstructions("");
+              queryClient.invalidateQueries({ queryKey: ["history", project] });
+            })
             .catch(console.error)
             .finally(() => setProcessing(false));
         }}

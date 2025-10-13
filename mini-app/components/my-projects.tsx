@@ -21,7 +21,7 @@ import { useRouter } from "next/navigation";
 
 export function MyProjects({ user }: { user: string | null }) {
   const { data: userInfo } = useQuery({
-    queryKey: [user ?? ""],
+    queryKey: ["user", user ?? ""],
     enabled: !!user,
     queryFn: async () => {
       return fetch("/api/factory/user/info")
