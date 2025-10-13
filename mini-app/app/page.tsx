@@ -42,7 +42,12 @@ export default function Home() {
   return (
     <main className="flex flex-col gap-8 place-items-center px-4">
       <div className="flex flex-col gap-1 place-items-center text-center">
-        <span className="text-2xl">Mini App Factory</span>
+        <div className="flex gap-1 place-items-center">
+          <span className="text-2xl">Mini App Factory</span>
+          <span className="px-1.5 py-0.5 rounded-full bg-primary text-primary-foreground text-xs">
+            BETA
+          </span>
+        </div>
         <span className="text-muted-foreground">
           AI-powered application to allow creation of Farcaster mini apps with
           natural language.

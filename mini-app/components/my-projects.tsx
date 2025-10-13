@@ -35,6 +35,17 @@ export function MyProjects({ user }: { user: string | null }) {
   const [creatingProject, setCreatingProject] = useState<boolean>(false);
   const router = useRouter();
 
+  const { data: projectAvailable } = useQuery({
+    queryKey: ["projectAvailable", projectName ?? ""],
+    enabled: !!projectName,
+    queryFn: async () => {
+      return fetch(`/api/factory/project/available?project=${projectName}`)
+        .then((res) => res.json())
+        .then((data) => data as boolean)
+        .catch(console.error);
+    },
+  });
+
   return (
     <div className="flex flex-col place-items-center gap-3">
       <Dialog>
@@ -61,7 +72,7 @@ export function MyProjects({ user }: { user: string | null }) {
               aria-invalid={
                 !new RegExp(/^[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?$/).test(
                   projectName
-                )
+                ) || projectAvailable === false
               }
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
@@ -94,7 +105,8 @@ export function MyProjects({ user }: { user: string | null }) {
                 creatingProject ||
                 !new RegExp(/^[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?$/).test(
                   projectName
-                )
+                ) ||
+                projectAvailable === false
               }
             >
               Create
