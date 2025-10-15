@@ -12,9 +12,16 @@ export async function GET() {
         signature: "",
       })
   );
+  const baseBuilder = JSON.parse(
+    process.env.NEXT_PUBLIC_BASE_BUILDER ??
+      JSON.stringify({
+        allowedAddresses: [],
+      })
+  );
 
   const config = {
     accountAssociation,
+    baseBuilder,
     miniapp: {
       version: "1",
       name: title,

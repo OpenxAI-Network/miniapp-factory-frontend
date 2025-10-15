@@ -68,6 +68,17 @@ in
         };
       };
 
+      baseBuilder = {
+        allowedAddresses = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [ ];
+          example = [ "0x44e2f8cB623f359B902907570EcfEE45fa5BD21B" ];
+          description = ''
+            Allow Base Build account connection.
+          '';
+        };
+      };
+
       openFirewall = lib.mkOption {
         type = lib.types.bool;
         default = true;
@@ -94,6 +105,7 @@ in
         PORT = toString cfg.port;
         NEXT_PUBLIC_URL = cfg.url;
         NEXT_PUBLIC_ACCOUNT_ASSOCIATION = builtins.toJSON cfg.accountAssociation;
+        NEXT_PUBLIC_BASE_BUILDER = builtins.toJSON cfg.baseBuilder;
       };
       serviceConfig = {
         ExecStart = "${lib.getExe miniapp-factory-frontend}";
