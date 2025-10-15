@@ -35,10 +35,8 @@ export default async function Project({
               </Link>
             </Button>
           </div>
-          <AccountAssociation
-            domain={`${project}.miniapp-factory.marketplace.openxai.network`}
-          />
-          <BaseBuild />
+          <AccountAssociation project={project} />
+          <BaseBuild project={project} />
         </div>
         <Share
           text={`Checkout this app I created using OpenxAI's #MiniAppFactory! https://${project}.miniapp-factory.marketplace.openxai.network \nCreate your own app at https://miniapp-factory.marketplace.openxai.network`}

@@ -22,14 +22,14 @@ export function MiniAppProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const ready = async () => {
       await Promise.all([
-        context.sdk.context
+        sdk.context
           .then((context) =>
             setContext((oldContext) => {
               return { ...oldContext, context };
             })
           )
           .catch(console.error),
-        context.sdk
+        sdk
           .isInMiniApp()
           .then((isInMiniApp) =>
             setContext((oldContext) => {
@@ -40,7 +40,7 @@ export function MiniAppProvider({ children }: { children: React.ReactNode }) {
         ,
       ]);
 
-      await context.sdk.actions.ready().catch(console.error);
+      await sdk.actions.ready().catch(console.error);
     };
 
     ready();

@@ -1,5 +1,6 @@
 "use client";
 
+import { useAccount } from "wagmi";
 import { useMiniAppContext } from "./context/miniapp-provider";
 import { Button } from "./ui/button";
 import {
@@ -13,8 +14,9 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 
-export function BaseBuild() {
-  const { isInMiniApp, context } = useMiniAppContext();
+export function BaseBuild({ project }: { project: string }) {
+  const { isInMiniApp } = useMiniAppContext();
+  const { address } = useAccount();
 
   if (!isInMiniApp) return <></>;
 
@@ -35,7 +37,29 @@ export function BaseBuild() {
             <Button variant="secondary">Cancel</Button>
           </DialogClose>
           <DialogClose>
-            <Button>Link</Button>
+            <Button
+              onClick={() => {
+                if (!address) {
+                  return;
+                }
+
+                fetch("/api/factory/project/base_build", {
+                  method: "POST",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    project,
+                    base_build: {
+                      allowed_addresses: [address],
+                    },
+                  }),
+                }).catch(console.error);
+              }}
+            >
+              Link
+            </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>
