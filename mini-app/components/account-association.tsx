@@ -38,64 +38,62 @@ export function AccountAssociation({ project }: { project: string }) {
           <DialogClose>
             <Button variant="secondary">Cancel</Button>
           </DialogClose>
-          <DialogClose>
-            <Button
-              onClick={() => {
-                if (!context?.user || !address) {
-                  return;
-                }
+          <Button
+            onClick={() => {
+              if (!context?.user || !address) {
+                return;
+              }
 
-                const header = {
-                  fid: context.user.fid,
-                  type: "auth",
-                  key: address,
-                };
-                const payload = {
-                  domain: `${project}.miniapp-factory.marketplace.openxai.network`,
-                };
-                const encodedHeader = new Buffer(
-                  JSON.stringify(header),
-                  "utf-8"
-                ).toString("base64url");
-                const encodedPayload = new Buffer(
-                  JSON.stringify(payload),
-                  "utf-8"
-                ).toString("base64url");
+              const header = {
+                fid: context.user.fid,
+                type: "auth",
+                key: address,
+              };
+              const payload = {
+                domain: `${project}.miniapp-factory.marketplace.openxai.network`,
+              };
+              const encodedHeader = new Buffer(
+                JSON.stringify(header),
+                "utf-8"
+              ).toString("base64url");
+              const encodedPayload = new Buffer(
+                JSON.stringify(payload),
+                "utf-8"
+              ).toString("base64url");
 
-                signMessage(
-                  {
-                    message: `${encodedHeader}.${encodedPayload}`,
-                  },
-                  {
-                    onSuccess(signature) {
-                      const encodedSignature = new Buffer(
-                        JSON.stringify(signature.replace("0x", "")),
-                        "utf-8"
-                      ).toString("base64url");
+              signMessage(
+                {
+                  message: `${encodedHeader}.${encodedPayload}`,
+                },
+                {
+                  onSuccess(signature) {
+                    const encodedSignature = new Buffer(
+                      JSON.stringify(signature.replace("0x", "")),
+                      "utf-8"
+                    ).toString("base64url");
 
-                      fetch("/api/factory/project/account_association", {
-                        method: "POST",
-                        headers: {
-                          Accept: "application/json",
-                          "Content-Type": "application/json",
+                    fetch("/api/factory/project/account_association", {
+                      method: "POST",
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        project,
+                        account_association: {
+                          header: encodedHeader,
+                          payload: encodedPayload,
+                          signature: encodedSignature,
                         },
-                        body: JSON.stringify({
-                          project,
-                          account_association: {
-                            header: encodedHeader,
-                            payload: encodedPayload,
-                            signature: encodedSignature,
-                          },
-                        }),
-                      }).catch(console.error);
-                    },
-                  }
-                );
-              }}
-            >
-              Associate
-            </Button>
-          </DialogClose>
+                      }),
+                    }).catch(console.error);
+                  },
+                }
+              );
+            }}
+          >
+            Associate
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

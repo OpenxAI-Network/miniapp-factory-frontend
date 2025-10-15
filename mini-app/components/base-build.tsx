@@ -36,31 +36,29 @@ export function BaseBuild({ project }: { project: string }) {
           <DialogClose>
             <Button variant="secondary">Cancel</Button>
           </DialogClose>
-          <DialogClose>
-            <Button
-              onClick={() => {
-                if (!address) {
-                  return;
-                }
+          <Button
+            onClick={() => {
+              if (!address) {
+                return;
+              }
 
-                fetch("/api/factory/project/base_build", {
-                  method: "POST",
-                  headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
+              fetch("/api/factory/project/base_build", {
+                method: "POST",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  project,
+                  base_build: {
+                    allowed_addresses: [address],
                   },
-                  body: JSON.stringify({
-                    project,
-                    base_build: {
-                      allowed_addresses: [address],
-                    },
-                  }),
-                }).catch(console.error);
-              }}
-            >
-              Link
-            </Button>
-          </DialogClose>
+                }),
+              }).catch(console.error);
+            }}
+          >
+            Link
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
