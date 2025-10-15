@@ -35,7 +35,7 @@ export function ProjectHistory({ project }: { project: string }) {
         .then((data) => data as Deployment[])
         .catch(console.error);
     },
-    refetchInterval: 5_000, // 5 seconds
+    refetchInterval: 1_000, // 1 second
   });
 
   return (

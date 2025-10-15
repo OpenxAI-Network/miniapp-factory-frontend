@@ -75,7 +75,9 @@ export function MyProjects({ user }: { user: string | null }) {
                 ) || projectAvailable === false
               }
               value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
+              onChange={(e) =>
+                setProjectName(e.target.value.toLowerCase().replace(" ", "-"))
+              }
             />
           </div>
           <DialogFooter>
