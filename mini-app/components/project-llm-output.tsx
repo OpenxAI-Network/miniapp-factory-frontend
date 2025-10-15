@@ -37,7 +37,7 @@ export function ProjectLLMOutput({ project }: { project: string }) {
       <span className="text-xl">AI Live Output</span>
       <div className="w-full" ref={scrollAreaRef}>
         <ScrollArea className="rounded border bg-black h-[500px]">
-          <div className="px-3 py-2 font-mono text-muted flex flex-col">
+          <div className="px-3 py-2 font-mono text-muted text-xs flex flex-col">
             {llm_output?.split("\n").map((line, i) => (
               <span key={i}>{line}</span>
             ))}
