@@ -72,7 +72,7 @@ export function AccountAssociation({ project }: { project: string }) {
                   onChange={(e) => setSignature(e.target.value)}
                 />
               </div>
-              {context && sdk?.experimental?.signManifest && (
+              {context && context.client.clientFid !== 309857 && (
                 <Button
                   onClick={() => {
                     try {

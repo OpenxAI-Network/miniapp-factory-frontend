@@ -1,6 +1,7 @@
 import { AccountAssociation } from "@/components/account-association";
 import { BaseBuild } from "@/components/base-build";
 import { ChangeProject } from "@/components/change-project";
+import { CopyDomain } from "@/components/copy-domain";
 import { ProjectHistory } from "@/components/project-history";
 import { ProjectLLMOutput } from "@/components/project-llm-output";
 import { Share } from "@/components/share";
@@ -38,15 +39,7 @@ export default async function Project({
           <AccountAssociation project={project} />
           <BaseBuild project={project} />
           <div>
-            <Button
-              onClick={() => {
-                navigator.clipboard.writeText(
-                  `${project}.miniapp-factory.marketplace.openxai.network`
-                );
-              }}
-            >
-              Copy Domain
-            </Button>
+            <CopyDomain project={project} />
           </div>
           <div>
             <Share
