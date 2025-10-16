@@ -19,7 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Textarea } from "./ui/textarea";
 
 export function AccountAssociation({ project }: { project: string }) {
-  const { isInMiniApp } = useMiniAppContext();
+  const { isInMiniApp, context, sdk } = useMiniAppContext();
 
   const [open, setOpen] = useState<boolean>(false);
   const [header, setHeader] = useState<string>("");
@@ -72,6 +72,27 @@ export function AccountAssociation({ project }: { project: string }) {
                   onChange={(e) => setSignature(e.target.value)}
                 />
               </div>
+              {context && sdk?.experimental?.signManifest && (
+                <Button
+                  onClick={() => {
+                    try {
+                      sdk.experimental
+                        .signManifest({
+                          domain: `${project}.miniapp-factory.marketplace.openxai.network`,
+                        })
+                        .then((account_association) => {
+                          setHeader(account_association.header);
+                          setPayload(account_association.payload);
+                          setSignature(account_association.signature);
+                        });
+                    } catch (e) {
+                      console.error(e);
+                    }
+                  }}
+                >
+                  Sign
+                </Button>
+              )}
             </div>
           </TabsContent>
           <TabsContent value="json">
