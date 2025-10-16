@@ -72,7 +72,7 @@ export function AccountAssociation({ project }: { project: string }) {
                   onChange={(e) => setSignature(e.target.value)}
                 />
               </div>
-              {context && context.client.clientFid !== 309857 && (
+              {/* {context && context.client.clientFid !== 309857 && (
                 <Button
                   onClick={() => {
                     try {
@@ -92,7 +92,7 @@ export function AccountAssociation({ project }: { project: string }) {
                 >
                   Sign
                 </Button>
-              )}
+              )} */}
             </div>
           </TabsContent>
           <TabsContent value="json">
