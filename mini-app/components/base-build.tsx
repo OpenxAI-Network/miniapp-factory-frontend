@@ -13,15 +13,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
+import { useState } from "react";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
 
 export function BaseBuild({ project }: { project: string }) {
   const { isInMiniApp } = useMiniAppContext();
-  const { address } = useAccount();
+
+  const [open, setOpen] = useState<boolean>(false);
+  const [allowedAddresses, setAllowedAddresses] = useState<string>("");
 
   if (!isInMiniApp) return <></>;
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <Button>Base Build</Button>
       </DialogTrigger>
@@ -32,16 +37,22 @@ export function BaseBuild({ project }: { project: string }) {
             Link this mini app with your Base Build account.
           </DialogDescription>
         </DialogHeader>
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="basebuild-allowedaddress">Allowed Addresses</Label>
+            <Input
+              id="basebuild-allowedaddress"
+              value={allowedAddresses}
+              onChange={(e) => setAllowedAddresses(e.target.value)}
+            />
+          </div>
+        </div>
         <DialogFooter>
-          <DialogClose>
+          <DialogClose asChild>
             <Button variant="secondary">Cancel</Button>
           </DialogClose>
           <Button
             onClick={() => {
-              if (!address) {
-                return;
-              }
-
               fetch("/api/factory/project/base_build", {
                 method: "POST",
                 headers: {
@@ -51,11 +62,14 @@ export function BaseBuild({ project }: { project: string }) {
                 body: JSON.stringify({
                   project,
                   base_build: {
-                    allowed_addresses: [address],
+                    allowed_addresses: [allowedAddresses],
                   },
                 }),
-              }).catch(console.error);
+              })
+                .then(() => setOpen(false))
+                .catch(console.error);
             }}
+            disabled={!allowedAddresses}
           >
             Link
           </Button>

@@ -1,6 +1,5 @@
 "use client";
 
-import { useAccount, useSignMessage } from "wagmi";
 import { useMiniAppContext } from "./context/miniapp-provider";
 import { Button } from "./ui/button";
 import {
@@ -13,32 +12,87 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
+import { useState } from "react";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
 
 export function AccountAssociation({ project }: { project: string }) {
-  const { isInMiniApp, context } = useMiniAppContext();
-  const { address } = useAccount();
-  const { signMessage } = useSignMessage();
+  const { isInMiniApp } = useMiniAppContext();
+
+  const [open, setOpen] = useState<boolean>(false);
+  const [header, setHeader] = useState<string>("");
+  const [payload, setPayload] = useState<string>("");
+  const [signature, setSignature] = useState<string>("");
 
   if (!isInMiniApp) return <></>;
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button>Account Association</Button>
+        <Button>Farcaster</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Account Association</DialogTitle>
+          <DialogTitle>Farcaster</DialogTitle>
           <DialogDescription>
-            Associate this mini app with your account. This requires a signature
-            from your account.
+            Link this mini app with your Farcaster account.
           </DialogDescription>
         </DialogHeader>
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="farcaster-header">Header</Label>
+            <Input
+              id="farcaster-header"
+              value={header}
+              onChange={(e) => setHeader(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="farcaster-payload">Payload</Label>
+            <Input
+              id="farcaster-payload"
+              value={payload}
+              onChange={(e) => setPayload(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="farcaster-signature">Signature</Label>
+            <Input
+              id="farcaster-signature"
+              value={signature}
+              onChange={(e) => setSignature(e.target.value)}
+            />
+          </div>
+        </div>
         <DialogFooter>
-          <DialogClose>
+          <DialogClose asChild>
             <Button variant="secondary">Cancel</Button>
           </DialogClose>
           <Button
+            onClick={() => {
+              fetch("/api/factory/project/account_association", {
+                method: "POST",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  project,
+                  account_association: {
+                    header,
+                    payload,
+                    signature,
+                  },
+                }),
+              })
+                .then(() => setOpen(false))
+                .catch(console.error);
+            }}
+            disabled={!header || !payload || !signature}
+          >
+            Link
+          </Button>
+          {/* <Button
             onClick={() => {
               if (!context?.user || !address) {
                 return;
@@ -52,14 +106,19 @@ export function AccountAssociation({ project }: { project: string }) {
               const payload = {
                 domain: `${project}.miniapp-factory.marketplace.openxai.network`,
               };
-              const encodedHeader = new Buffer(
-                JSON.stringify(header),
-                "utf-8"
-              ).toString("base64url");
+              cons = new Buffer(JSON.stringify(header), "utf-8")
+                .toString")
+                .replace(/\+ "-")
+                .replace(/\//g, "_")
+                .replace(/=+$/, "");
               const encodedPayload = new Buffer(
                 JSON.stringify(payload),
                 "utf-8"
-              ).toString("base64url");
+              )
+                .toString("base64")
+                .replace(/\+/g, "-")
+                .replace(/\//g, "_")
+                .replace(/=+$/, "");
 
               signMessage(
                 {
@@ -70,7 +129,11 @@ export function AccountAssociation({ project }: { project: string }) {
                     const encodedSignature = new Buffer(
                       JSON.stringify(signature.replace("0x", "")),
                       "utf-8"
-                    ).toString("base64url");
+                    )
+                      .toString("base64")
+                      .replace(/\+/g, "-")
+                      .replace(/\//g, "_")
+                      .replace(/=+$/, "");
 
                     fetch("/api/factory/project/account_association", {
                       method: "POST",
@@ -92,8 +155,8 @@ export function AccountAssociation({ project }: { project: string }) {
               );
             }}
           >
-            Associate
-          </Button>
+            Link
+          </Button> */}
         </DialogFooter>
       </DialogContent>
     </Dialog>
