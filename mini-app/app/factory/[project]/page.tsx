@@ -37,10 +37,23 @@ export default async function Project({
           </div>
           <AccountAssociation project={project} />
           <BaseBuild project={project} />
+          <div>
+            <Button
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `${project}.miniapp-factory.marketplace.openxai.network`
+                );
+              }}
+            >
+              Copy Domain
+            </Button>
+          </div>
+          <div>
+            <Share
+              text={`Checkout this app I created using OpenxAI's #MiniAppFactory! https://${project}.miniapp-factory.marketplace.openxai.network \nCreate your own app at https://miniapp-factory.marketplace.openxai.network`}
+            />
+          </div>
         </div>
-        <Share
-          text={`Checkout this app I created using OpenxAI's #MiniAppFactory! https://${project}.miniapp-factory.marketplace.openxai.network \nCreate your own app at https://miniapp-factory.marketplace.openxai.network`}
-        />
       </div>
       <ChangeProject project={project} />
       <ProjectHistory project={project} />
