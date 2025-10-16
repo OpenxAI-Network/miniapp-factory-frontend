@@ -19,7 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Textarea } from "./ui/textarea";
 
 export function AccountAssociation({ project }: { project: string }) {
-  const { isInMiniApp, context, sdk } = useMiniAppContext();
+  const { isInMiniApp } = useMiniAppContext();
 
   const [open, setOpen] = useState<boolean>(false);
   const [header, setHeader] = useState<string>("");
