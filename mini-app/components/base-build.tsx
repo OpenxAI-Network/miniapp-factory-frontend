@@ -18,12 +18,8 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 
 export function BaseBuild({ project }: { project: string }) {
-  const { isInMiniApp } = useMiniAppContext();
-
   const [open, setOpen] = useState<boolean>(false);
   const [allowedAddresses, setAllowedAddresses] = useState<string>("");
-
-  if (!isInMiniApp) return <></>;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

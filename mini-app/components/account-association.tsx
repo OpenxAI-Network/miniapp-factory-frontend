@@ -19,15 +19,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Textarea } from "./ui/textarea";
 
 export function AccountAssociation({ project }: { project: string }) {
-  const { isInMiniApp } = useMiniAppContext();
-
   const [open, setOpen] = useState<boolean>(false);
   const [header, setHeader] = useState<string>("");
   const [payload, setPayload] = useState<string>("");
   const [signature, setSignature] = useState<string>("");
   const [json, setJson] = useState<string>("");
-
-  if (!isInMiniApp) return <></>;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
