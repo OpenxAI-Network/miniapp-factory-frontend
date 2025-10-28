@@ -5,6 +5,8 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Icon from "@/public/icon.png";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Info } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -61,9 +63,19 @@ export default function Home() {
         height={200}
       />
       <div className="flex flex-col gap-3">
-        <Button asChild>
+        {/* <Button asChild>
           <Link href="/factory">Enter the factory</Link>
-        </Button>
+        </Button> */}
+        <Alert className="max-w-[500px]">
+          <Info />
+          <AlertTitle>Factory Closed</AlertTitle>
+          <AlertDescription>
+            A huge thank you to everyone participating in the beta! Based on the
+            feedback we&apos;ve received, we are implementing large
+            architectural and user experience improvements to the factory.
+            Please look forward to the new version!
+          </AlertDescription>
+        </Alert>
         <Share
           text={`Create your own Farcaster mini app in seconds! ${process.env.NEXT_PUBLIC_URL}`}
         />
