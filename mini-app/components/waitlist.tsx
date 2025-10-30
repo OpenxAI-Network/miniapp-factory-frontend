@@ -204,7 +204,7 @@ export function Waitlist() {
               <CheckCircle2 className="text-green-600" />
               <span className="text-green-600">On the waitlist!</span>
             </div>
-            <span>
+            <span className="text-center">
               You&apos;ve successfully subscribed on waitlist position{" "}
               <span className="font-semibold text-lg">#{waitlistPosition}</span>
             </span>
