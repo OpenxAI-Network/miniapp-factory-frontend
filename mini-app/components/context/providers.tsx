@@ -30,6 +30,7 @@ const modal = createAppKit({
   defaultAccountTypes: {
     eip155: "eoa",
   },
+  features: { email: false, socials: false },
 });
 
 export function Providers({
