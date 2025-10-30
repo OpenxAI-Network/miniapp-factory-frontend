@@ -6,6 +6,22 @@ import { CheckCircle2, X } from "lucide-react";
 import { Spinner } from "./ui/spinner";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
+import {
+  ColumnDef,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import { DataTable } from "./ui/data-table";
+import { DataTablePagination } from "./ui/data-table-pagination";
+import { checksumAddress } from "viem";
+import Link from "next/link";
+
+interface PublicWaitlist {
+  account: string;
+  date: number;
+}
 
 export function Waitlist() {
   const address = useAddress();
@@ -55,6 +71,71 @@ export function Waitlist() {
       },
     }
   );
+
+  const { data: publicWaitlist, refetch: refetchPublicWaitlist } = useQuery({
+    queryKey: ["publicWaitlist"],
+    queryFn: async () => {
+      return await fetch(`/api/waitlist/all`)
+        .then((res) => {
+          if (res.status === 500) {
+            toast("Unknown error occurred.", {
+              className: "bg-red-600 border-red-600",
+            });
+          }
+          return res;
+        })
+        .then((res) => res.json())
+        .then((data) => data as PublicWaitlist[])
+        .catch(console.error);
+    },
+    refetchInterval: 10_000,
+  });
+
+  const columns: ColumnDef<PublicWaitlist>[] = [
+    {
+      header: "#",
+      cell: ({ row }) => <span>{row.index + 1}</span>,
+    },
+    {
+      header: "Account",
+      cell: ({ row }) => {
+        const address = `0x${row.original.account.replace(
+          "eth:",
+          ""
+        )}` as const;
+        return (
+          <Link
+            href={`https://etherscan.io/address/${address}`}
+            target="_blank"
+          >
+            {checksumAddress(address)}
+          </Link>
+        );
+      },
+    },
+    {
+      header: "Date",
+      cell: ({ row }) => {
+        const date = new Date(row.original.date * 1000);
+        const month = date.getMonth() + 1;
+        const monthStr =
+          month === 10 ? "Oct" : month === 11 ? "Nov" : month.toString();
+        return (
+          <span>
+            {date.getDate()} {monthStr}{" "}
+            {date.getHours().toString().padStart(2, "0")}:
+            {date.getMinutes().toString().padStart(2, "0")}
+          </span>
+        );
+      },
+    },
+  ];
+  const table = useReactTable({
+    columns: columns,
+    data: publicWaitlist ?? [],
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
 
   return (
     <div className="flex flex-col place-items-center gap-4">
@@ -109,6 +190,7 @@ export function Waitlist() {
                   }
 
                   refetchWaitlistPosition();
+                  refetchPublicWaitlist();
                 });
               }}
               disabled={waitlistAllowed !== true}
@@ -122,16 +204,19 @@ export function Waitlist() {
               <CheckCircle2 className="text-green-600" />
               <span className="text-green-600">On the waitlist!</span>
             </div>
-            <div className="flex place-items-center gap-1">
-              <span>
-                You&apos;ve successfully subscribed on waitlist position
-              </span>
-              <span className="font-semibold text-lg">
-                #{waitlistPosition + 1}
-              </span>
-            </div>
+            <span>
+              You&apos;ve successfully subscribed on waitlist position{" "}
+              <span className="font-semibold text-lg">#{waitlistPosition}</span>
+            </span>
           </>
         ))}
+      <div className="flex flex-col gap-1 max-w-screen px-2">
+        <ScrollArea className="w-full">
+          <DataTable table={table} />
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+        <DataTablePagination table={table} />
+      </div>
     </div>
   );
 }

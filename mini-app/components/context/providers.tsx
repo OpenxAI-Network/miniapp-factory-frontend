@@ -27,6 +27,9 @@ const modal = createAppKit({
   defaultNetwork: mainnet,
   metadata: metadata,
   themeMode: "light",
+  defaultAccountTypes: {
+    eip155: "eoa",
+  },
 });
 
 export function Providers({
