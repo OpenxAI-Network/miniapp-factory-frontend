@@ -29,7 +29,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
         <Providers cookies={cookies}>
-          <div className="font-sans min-h-screen flex flex-col place-content-between">
+          <div className="font-sans min-h-screen flex flex-col place-content-between gap-2">
             <Header />
             {children}
             <Footer />
