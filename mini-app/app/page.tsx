@@ -40,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function Home() {
+export default function HomePage() {
   return (
     <main className="flex flex-col gap-8 place-items-center px-4">
       <div className="flex flex-col gap-1 place-items-center text-center">
@@ -76,6 +76,9 @@ export default function Home() {
             Please look forward to the new version!
           </AlertDescription>
         </Alert>
+        {/* <Button asChild>
+          <Link href="/waitlist">Join the waitlist</Link>
+        </Button> */}
         <Share
           text={`Create your own Farcaster mini app in seconds! ${process.env.NEXT_PUBLIC_URL}`}
         />

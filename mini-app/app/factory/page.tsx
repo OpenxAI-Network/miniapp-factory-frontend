@@ -1,7 +1,7 @@
 import { MyProjects } from "@/components/my-projects";
 import { headers } from "next/headers";
 
-export default async function Factory() {
+export default async function FactoryPage() {
   const user = await headers().then((h) => h.get("Xnode-Auth-User"));
 
   return (

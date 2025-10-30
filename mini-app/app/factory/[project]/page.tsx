@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ViewMiniApp } from "@/components/view-miniapp";
 import Link from "next/link";
 
-export default async function Project({
+export default async function ProjectPage({
   params,
 }: {
   params: Promise<{ project: string }>;
