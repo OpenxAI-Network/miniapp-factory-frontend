@@ -32,9 +32,13 @@ const pages = [
     ),
     href: "/",
   },
+  // {
+  //   label: <span className="text-lg">Factory</span>,
+  //   href: "/factory",
+  // },
   {
-    label: <span className="text-lg">Factory</span>,
-    href: "/factory",
+    label: <span className="text-lg">Waitlist</span>,
+    href: "/waitlist",
   },
 ];
 
