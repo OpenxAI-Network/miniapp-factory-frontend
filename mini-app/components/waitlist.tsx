@@ -139,6 +139,11 @@ export function Waitlist() {
 
   return (
     <div className="flex flex-col place-items-center gap-4">
+      {publicWaitlist?.length && (
+        <span className="font-semibold text-lg text-center">
+          {publicWaitlist.length} people have joined the list!
+        </span>
+      )}
       {!address && (
         <div className="flex place-items-center gap-2">
           <span>Account Connected</span>
