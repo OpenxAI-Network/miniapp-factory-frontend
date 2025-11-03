@@ -11,8 +11,9 @@ import {
 } from "./ui/accordion";
 import { Spinner } from "./ui/spinner";
 import { cn } from "@/lib/utils";
+import { DeploymentLLMOutput } from "./deployment-llm-output";
 
-interface Deployment {
+export interface Deployment {
   id: number;
   project: string;
   instructions: string;
@@ -52,7 +53,7 @@ export function ProjectHistory({ project }: { project: string }) {
   );
 }
 
-enum Status {
+export enum Status {
   unknown = "...",
   deployed = "Deployed",
   error = "Error",
@@ -117,8 +118,9 @@ function HistoryItem({ deployment }: { deployment: Deployment }) {
         </div>
       </AccordionTrigger>
       <AccordionContent>
-        <div>
+        <div className="flex flex-col gap-3">
           <span>{deployment.instructions}</span>
+          <DeploymentLLMOutput deployment={deployment} status={status} />
         </div>
       </AccordionContent>
     </AccordionItem>

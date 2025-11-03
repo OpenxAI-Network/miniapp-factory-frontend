@@ -3,7 +3,6 @@ import { BaseBuild } from "@/components/base-build";
 import { ChangeProject } from "@/components/change-project";
 import { CopyDomain } from "@/components/copy-domain";
 import { ProjectHistory } from "@/components/project-history";
-import { ProjectLLMOutput } from "@/components/project-llm-output";
 import { Share } from "@/components/share";
 import { Button } from "@/components/ui/button";
 import { ViewMiniApp } from "@/components/view-miniapp";
@@ -50,7 +49,6 @@ export default async function ProjectPage({
       </div>
       <ChangeProject project={project} />
       <ProjectHistory project={project} />
-      <ProjectLLMOutput project={project} />
     </main>
   );
 }
