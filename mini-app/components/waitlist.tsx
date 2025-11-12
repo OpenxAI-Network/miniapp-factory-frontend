@@ -17,6 +17,7 @@ import { DataTable } from "./ui/data-table";
 import { DataTablePagination } from "./ui/data-table-pagination";
 import { checksumAddress } from "viem";
 import Link from "next/link";
+import { useEffect } from "react";
 
 interface PublicWaitlist {
   account: string;
@@ -75,7 +76,7 @@ export function Waitlist() {
   const { data: publicWaitlist, refetch: refetchPublicWaitlist } = useQuery({
     queryKey: ["publicWaitlist"],
     queryFn: async () => {
-      return await fetch(`/api/waitlist/all`)
+      return await fetch("/api/waitlist/all")
         .then((res) => {
           if (res.status === 500) {
             toast("Unknown error occurred.", {
@@ -135,7 +136,12 @@ export function Waitlist() {
     data: publicWaitlist ?? [],
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    autoResetPageIndex: false,
   });
+
+  useEffect(() => {
+    table.lastPage();
+  }, [publicWaitlist]);
 
   return (
     <div className="flex flex-col place-items-center gap-4">
@@ -152,7 +158,7 @@ export function Waitlist() {
       )}
       <appkit-button />
       {waitlistPosition !== undefined &&
-        (waitlistPosition === -1 ? (
+        (waitlistPosition === 0 ? (
           <>
             <div className="flex flex-col place-items-center gap-1">
               <div className="flex place-items-center gap-2">

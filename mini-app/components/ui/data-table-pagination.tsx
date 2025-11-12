@@ -26,7 +26,7 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="hidden size-8 p-0 lg:flex"
-            onClick={() => table.setPageIndex(0)}
+            onClick={() => table.firstPage()}
             disabled={!table.getCanPreviousPage()}
           >
             <span className="sr-only">Go to first page</span>
@@ -53,7 +53,7 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="hidden size-8 p-0 lg:flex"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            onClick={() => table.lastPage()}
             disabled={!table.getCanNextPage()}
           >
             <span className="sr-only">Go to last page</span>
