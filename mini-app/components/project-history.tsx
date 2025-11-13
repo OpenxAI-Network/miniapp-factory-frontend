@@ -12,6 +12,7 @@ import {
 import { Spinner } from "./ui/spinner";
 import { cn } from "@/lib/utils";
 import { DeploymentLLMOutput } from "./deployment-llm-output";
+import { useMemo } from "react";
 
 export interface Deployment {
   id: number;
@@ -64,13 +65,16 @@ export enum Status {
   queued = "Queued",
 }
 function HistoryItem({ deployment }: { deployment: Deployment }) {
-  const { data: deploymentRequest } = useRequestRequestInfo({
-    session: {
+  const session = useMemo(() => {
+    return {
       axiosInstance: axios.create({
         withCredentials: true,
       }),
       baseUrl: "https://miniapp-host.xnode-manager.openxai.org",
-    },
+    };
+  }, []);
+  const { data: deploymentRequest } = useRequestRequestInfo({
+    session,
     request_id: deployment.deployment_request ?? undefined,
   });
 
@@ -121,7 +125,17 @@ function HistoryItem({ deployment }: { deployment: Deployment }) {
       <AccordionContent>
         <div className="flex flex-col gap-3">
           <span>{deployment.instructions}</span>
-          <DeploymentLLMOutput deployment={deployment} status={status} />
+          <DeploymentLLMOutput
+            deployment={deployment}
+            status={status}
+            session={session}
+            request={
+              deployment.deployment_request !== null &&
+              deploymentRequest !== undefined
+                ? { id: deployment.deployment_request, info: deploymentRequest }
+                : undefined
+            }
+          />
         </div>
       </AccordionContent>
     </AccordionItem>

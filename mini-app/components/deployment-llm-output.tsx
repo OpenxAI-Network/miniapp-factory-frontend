@@ -4,41 +4,52 @@ import { useQuery } from "@tanstack/react-query";
 import { ScrollArea } from "./ui/scroll-area";
 import { useEffect, useMemo, useRef } from "react";
 import { Deployment, Status } from "./project-history";
+import { xnode } from "@openmesh-network/xnode-manager-sdk";
 
 export function DeploymentLLMOutput({
   deployment,
   status,
+  session,
+  request,
 }: {
   deployment: Deployment;
   status: Status;
+  session: xnode.utils.Session;
+  request?: { id: xnode.request.RequestId; info: xnode.request.RequestInfo };
 }) {
   const { data: llm_output } = useQuery({
-    queryKey: [
-      "llm_output",
-      deployment.id,
-      status === Status.coding || status === Status.imagegen,
-    ],
+    queryKey: ["llm_output", deployment.id, request !== undefined],
     enabled: status !== Status.queued,
     queryFn: async () => {
-      if (status === Status.coding || status === Status.imagegen) {
+      if (request !== undefined) {
+        return xnode.request
+          .command_info({
+            session: session,
+            path: {
+              request_id: request.id,
+              command: request.info.commands.toSorted(
+                (a, b) => Number(b) - Number(a)
+              )[0],
+            },
+          })
+          .then((info) => {
+            if ("UTF8" in info.stderr) {
+              return info.stderr.UTF8.output;
+            } else {
+              return "";
+            }
+          })
+          .catch(console.error);
+      } else {
         return fetch(
           `/api/factory/project/llm_output?deployment=${deployment.id}`
         )
           .then((res) => res.json())
           .then((data) => data as string)
           .catch(console.error);
-      } else {
-        return fetch(
-          `https://raw.githubusercontent.com/miniapp-factory/${deployment.project}/${deployment.coding_git_hash}/.aider.chat.history.md`
-        )
-          .then((res) => res.text())
-          .catch(console.error);
       }
     },
-    refetchInterval:
-      status === Status.coding || status === Status.imagegen
-        ? 1_000
-        : undefined, // every 1 second while deployment is being executed
+    refetchInterval: request?.info.result ? undefined : 1_000, // every 1 second while deployment is being executed
   });
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
