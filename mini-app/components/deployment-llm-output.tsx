@@ -29,7 +29,7 @@ export function DeploymentLLMOutput({
           .catch(console.error);
       } else {
         return fetch(
-          `https://raw.githubusercontent.com/miniapp-factory/${deployment.project}/${deployment.git_hash}/.aider.chat.history.md`
+          `https://raw.githubusercontent.com/miniapp-factory/${deployment.project}/${deployment.coding_git_hash}/.aider.chat.history.md`
         )
           .then((res) => res.text())
           .catch(console.error);

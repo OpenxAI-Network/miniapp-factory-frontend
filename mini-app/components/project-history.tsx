@@ -20,9 +20,10 @@ export interface Deployment {
   submitted_at: number;
   coding_started_at: number | null;
   coding_finished_at: number | null;
+  coding_git_hash: string | null;
   imagegen_started_at: number | null;
   imagegen_finished_at: number | null;
-  git_hash: string | null;
+  imagegen_git_hash: string | null;
   deployment_request: number | null;
 }
 
