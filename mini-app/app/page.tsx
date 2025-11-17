@@ -7,6 +7,8 @@ import Link from "next/link";
 import Icon from "@/public/icon.png";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Info } from "lucide-react";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 
 export const dynamic = "force-dynamic";
 
@@ -42,47 +44,51 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function HomePage() {
   return (
-    <main className="flex flex-col gap-8 place-items-center px-4">
-      <div className="flex flex-col gap-1 place-items-center text-center">
-        <div className="flex gap-1 place-items-center">
-          <span className="text-2xl">Mini App Factory</span>
-          <span className="px-1.5 py-0.5 rounded-full bg-primary text-primary-foreground text-xs">
-            BETA
+    <>
+      <Header />
+      <main className="flex flex-col gap-8 place-items-center px-4">
+        <div className="flex flex-col gap-1 place-items-center text-center">
+          <div className="flex gap-1 place-items-center">
+            <span className="text-2xl">Mini App Factory</span>
+            <span className="px-1.5 py-0.5 rounded-full bg-primary text-primary-foreground text-xs">
+              BETA
+            </span>
+          </div>
+          <span className="text-muted-foreground">
+            AI-powered application to allow creation of Farcaster mini apps with
+            natural language.
           </span>
         </div>
-        <span className="text-muted-foreground">
-          AI-powered application to allow creation of Farcaster mini apps with
-          natural language.
-        </span>
-      </div>
-      <Image
-        className="size-[200px]"
-        src={Icon}
-        alt="icon"
-        width={200}
-        height={200}
-      />
-      <div className="flex flex-col gap-3">
-        {/* <Button asChild>
+        <Image
+          className="size-[200px]"
+          src={Icon}
+          alt="icon"
+          width={200}
+          height={200}
+        />
+        <div className="flex flex-col gap-3">
+          {/* <Button asChild>
           <Link href="/factory">Enter the factory</Link>
         </Button> */}
-        <Alert className="max-w-[500px]">
-          <Info />
-          <AlertTitle>Factory Closed</AlertTitle>
-          <AlertDescription>
-            A huge thank you to everyone participating in the beta! Based on the
-            feedback we&apos;ve received, we are implementing large
-            architectural and user experience improvements to the factory.
-            Please look forward to the new version!
-          </AlertDescription>
-        </Alert>
-        <Button asChild>
-          <Link href="/waitlist">Join the waitlist</Link>
-        </Button>
-        <Share
-          text={`Create your own Farcaster mini app in seconds! ${process.env.NEXT_PUBLIC_URL}`}
-        />
-      </div>
-    </main>
+          <Alert className="max-w-[500px]">
+            <Info />
+            <AlertTitle>Factory Closed</AlertTitle>
+            <AlertDescription>
+              A huge thank you to everyone participating in the beta! Based on
+              the feedback we&apos;ve received, we are implementing large
+              architectural and user experience improvements to the factory.
+              Please look forward to the new version!
+            </AlertDescription>
+          </Alert>
+          <Button asChild>
+            <Link href="/waitlist">Join the waitlist</Link>
+          </Button>
+          <Share
+            text={`Create your own Farcaster mini app in seconds! ${process.env.NEXT_PUBLIC_URL}`}
+          />
+        </div>
+      </main>
+      <Footer />
+    </>
   );
 }

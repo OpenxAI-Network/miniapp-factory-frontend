@@ -10,14 +10,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData> {
   table: TableType<TData>;
+  className?: string;
 }
 
-export function DataTable<TData>({ table }: DataTableProps<TData>) {
+export function DataTable<TData>({ table, className }: DataTableProps<TData>) {
   return (
-    <div className="rounded-md border">
+    <div className={cn("rounded-md border", className)}>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
 import { description, title } from "@/lib/metadata";
 import { Providers } from "@/components/context/providers";
 import { headers } from "next/headers";
@@ -30,9 +28,7 @@ export default async function RootLayout({
       <body className={`${inter.className} antialiased`}>
         <Providers cookies={cookies}>
           <div className="font-sans min-h-screen flex flex-col place-content-between gap-2">
-            <Header />
             {children}
-            <Footer />
           </div>
           <Toaster />
         </Providers>

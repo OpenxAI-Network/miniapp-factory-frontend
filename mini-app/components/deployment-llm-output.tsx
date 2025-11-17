@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { ScrollArea } from "./ui/scroll-area";
 import { useEffect, useMemo, useRef } from "react";
-import { Deployment, Status } from "./project-history";
+import { Deployment, Status } from "./project";
 import { xnode } from "@openmesh-network/xnode-manager-sdk";
 
 export function DeploymentLLMOutput({
@@ -12,14 +12,14 @@ export function DeploymentLLMOutput({
   session,
   request,
 }: {
-  deployment: Deployment;
-  status: Status;
+  deployment?: Deployment;
+  status?: Status;
   session: xnode.utils.Session;
   request?: { id: xnode.request.RequestId; info: xnode.request.RequestInfo };
 }) {
   const { data: llm_output } = useQuery({
-    queryKey: ["llm_output", deployment.id, request !== undefined],
-    enabled: status !== Status.queued,
+    queryKey: ["llm_output", deployment?.id ?? "", request !== undefined],
+    enabled: status !== Status.queued && deployment?.id !== undefined,
     queryFn: async () => {
       if (request !== undefined) {
         return xnode.request
@@ -42,7 +42,7 @@ export function DeploymentLLMOutput({
           .catch(console.error);
       } else {
         return fetch(
-          `/api/factory/project/llm_output?deployment=${deployment.id}`
+          `/api/factory/project/llm_output?deployment=${deployment?.id}`
         )
           .then((res) => res.json())
           .then((data) => data as string)
@@ -68,17 +68,14 @@ export function DeploymentLLMOutput({
   }, [llm_output, scrollToBottom]);
 
   return (
-    <div className="flex w-full flex-col gap-3 place-items-center">
-      <span className="text-lg">AI Live Output</span>
-      <div className="w-full" ref={scrollAreaRef}>
-        <ScrollArea className="rounded border bg-black h-[500px]">
-          <div className="px-3 py-2 font-mono text-muted text-xs flex flex-col">
-            {llm_output?.split("\n").map((line, i) => (
-              <span key={i}>{line}</span>
-            ))}
-          </div>
-        </ScrollArea>
-      </div>
+    <div className="w-full" ref={scrollAreaRef}>
+      <ScrollArea className="rounded-xl border border-black h-[100px]">
+        <div className="px-3 py-2 font-mono text-xs flex flex-col">
+          {llm_output?.split("\n").map((line, i) => (
+            <span key={i}>{line}</span>
+          ))}
+        </div>
+      </ScrollArea>
     </div>
   );
 }
