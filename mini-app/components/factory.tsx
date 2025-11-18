@@ -131,18 +131,21 @@ export function Factory({ user }: { user: string | null }) {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create new project</DialogTitle>
+            <DialogTitle className="text-xl">Create new mini app</DialogTitle>
             <DialogDescription>
-              Your mini app will be automatically deployed under the domain{" "}
-              {"{project name}"}
-              .miniapp-factory.marketplace.openxai.network. The project name
-              cannot be changed afterward.
+              Your mini app can be accessed through https://
+              {"{name}"}
+              .miniapp-factory.marketplace.openxai.network. The name cannot be
+              changed afterward.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-1">
-            <Label htmlFor="miniapp-project-name">Project Name</Label>
+            <Label htmlFor="miniapp-project-name" className="ml-3">
+              Mini App Name
+            </Label>
             <Input
               id="miniapp-project-name"
+              className="rounded-2xl"
               aria-invalid={
                 !new RegExp(/^[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?$/).test(
                   projectName
@@ -156,9 +159,15 @@ export function Factory({ user }: { user: string | null }) {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button
+                className="rounded-3xl h-auto py-3 px-6"
+                variant="outline"
+              >
+                Cancel
+              </Button>
             </DialogClose>
             <Button
+              className="rounded-3xl h-auto py-3 px-6 bg-blue-700"
               onClick={() => {
                 setCreatingProject(true);
                 fetch("/api/factory/project/create", {

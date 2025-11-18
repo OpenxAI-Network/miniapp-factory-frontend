@@ -2,8 +2,10 @@
 
 import { Button } from "./ui/button";
 import {
+  AlertOctagon,
   ArrowLeft,
   Brush,
+  CheckCircle,
   Code2,
   Coins,
   ExternalLink,
@@ -12,6 +14,7 @@ import {
   Joystick,
   Pencil,
   Rocket,
+  X,
 } from "lucide-react";
 import { Textarea } from "./ui/textarea";
 import { useEffect, useMemo, useState } from "react";
@@ -31,8 +34,8 @@ import { DeploymentLLMOutput } from "./deployment-llm-output";
 import { ViewMiniApp } from "./view-miniapp";
 import { AccountAssociation } from "./account-association";
 import { BaseBuild } from "./base-build";
-import { CopyDomain } from "./copy-domain";
 import { Share } from "./share";
+import { Skeleton } from "./ui/skeleton";
 
 export interface Deployment {
   id: number;
@@ -149,25 +152,27 @@ export function Project({ project }: { project: string }) {
     return () => clearInterval(interval);
   }, [lastDeployment]);
 
+  const [dismissed, setDismissed] = useState<boolean>(false);
+
   return (
     <main className="flex flex-col gap-3 place-items-center place-content-between px-4 py-4 grow">
-      <div className="flex place-content-between place-items-center w-full max-w-[500px]">
-        <div className="p-2 rounded-full bg-blue-600">
-          <FactoryIcon className="text-white" />
-        </div>
-        <Link href="/factory">
-          <div className="p-2 rounded-full bg-gray-400">
-            <ArrowLeft />
-          </div>
-        </Link>
-      </div>
-      <span className="text-5xl font-semibold">Build Your App!</span>
       {status === Status.queued ||
       status === Status.coding ||
       status === Status.imagegen ||
       status === Status.deploying ||
       status === Status.unknown ? (
         <>
+          <div className="flex place-content-between place-items-center w-full max-w-[500px]">
+            <div className="p-2 rounded-full bg-blue-600">
+              <FactoryIcon className="text-white" />
+            </div>
+            <Link href="/factory">
+              <div className="p-2 rounded-full bg-gray-400">
+                <ArrowLeft />
+              </div>
+            </Link>
+          </div>
+          <span className="text-5xl font-semibold">Build Your App!</span>
           <div className="flex flex-col place-items-center gap-10">
             <Carousel className="pointer-events-none" setApi={setCarousel}>
               <CarouselContent>
@@ -175,7 +180,7 @@ export function Project({ project }: { project: string }) {
                 <CarouselItem className="basis-1/3">
                   <div className="grid place-content-center">
                     {status === Status.queued && (
-                      <div className="col-start-1 row-start-1 -z-10 flex place-items-center place-content-center size-30 rounded-full animate-[spin_2s_linear_infinite] bg-gradient-to-tr from-[#CAFA54] to-[#0016FF]" />
+                      <div className="col-start-1 row-start-1 -z-10 size-30 rounded-full animate-[spin_2s_linear_infinite] bg-gradient-to-tr from-[#CAFA54] to-[#0016FF]" />
                     )}
                     <div className="col-start-1 row-start-1 flex place-items-center place-content-center">
                       <div
@@ -197,7 +202,7 @@ export function Project({ project }: { project: string }) {
                 <CarouselItem className="basis-1/3">
                   <div className="grid place-content-center">
                     {status === Status.coding && (
-                      <div className="col-start-1 row-start-1 -z-10 flex place-items-center place-content-center size-30 rounded-full animate-[spin_2s_linear_infinite] bg-gradient-to-tr from-[#CAFA54] to-[#0016FF]" />
+                      <div className="col-start-1 row-start-1 -z-10 size-30 rounded-full animate-[spin_2s_linear_infinite] bg-gradient-to-tr from-[#CAFA54] to-[#0016FF]" />
                     )}
                     <div className="col-start-1 row-start-1 flex place-items-center place-content-center">
                       <div
@@ -219,7 +224,7 @@ export function Project({ project }: { project: string }) {
                 <CarouselItem className="basis-1/3">
                   <div className="grid place-content-center">
                     {status === Status.imagegen && (
-                      <div className="col-start-1 row-start-1 -z-10 flex place-items-center place-content-center size-30 rounded-full animate-[spin_2s_linear_infinite] bg-gradient-to-tr from-[#CAFA54] to-[#0016FF]" />
+                      <div className="col-start-1 row-start-1 -z-10 size-30 rounded-full animate-[spin_2s_linear_infinite] bg-gradient-to-tr from-[#CAFA54] to-[#0016FF]" />
                     )}
                     <div className="col-start-1 row-start-1 flex place-items-center place-content-center">
                       <div
@@ -242,7 +247,7 @@ export function Project({ project }: { project: string }) {
                 <CarouselItem className="basis-1/3">
                   <div className="grid place-content-center">
                     {status === Status.deploying && (
-                      <div className="col-start-1 row-start-1 -z-10 flex place-items-center place-content-center size-30 rounded-full animate-[spin_2s_linear_infinite] bg-gradient-to-tr from-[#CAFA54] to-[#0016FF]" />
+                      <div className="col-start-1 row-start-1 -z-10 size-30 rounded-full animate-[spin_2s_linear_infinite] bg-gradient-to-tr from-[#CAFA54] to-[#0016FF]" />
                     )}
                     <div className="col-start-1 row-start-1 flex place-items-center place-content-center">
                       <div
@@ -274,7 +279,7 @@ export function Project({ project }: { project: string }) {
             />
             <span className="text-xl">{progress.toFixed(0)}%</span>
           </div>
-          <div className="flex flex-col gap-1  w-full max-w-[500px]">
+          <div className="flex flex-col gap-1 w-full max-w-[500px]">
             <div className="flex place-items-center place-content-between">
               <div className="flex place-items-center gap-2">
                 <div className="size-3 rounded-full bg-green-500 animate-pulse" />
@@ -306,40 +311,126 @@ export function Project({ project }: { project: string }) {
             />
           </div>
         </>
-      ) : (
+      ) : !dismissed &&
+        (status === Status.deployed || status === Status.error) ? (
         <>
-          {lastDeployment !== undefined && (
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <ViewMiniApp
-                  miniapp={`https://${project}.miniapp-factory.marketplace.openxai.network`}
-                />
+          <div className="flex place-content-between place-items-center w-full max-w-[500px]">
+            <div className="p-2 rounded-full bg-blue-600">
+              <FactoryIcon className="text-white" />
+            </div>
+            <div
+              className="p-2 rounded-full bg-gray-400"
+              onClick={() => {
+                setDismissed(true);
+              }}
+            >
+              <X />
+            </div>
+          </div>
+          {status === Status.deployed ? (
+            <>
+              <div className="grid place-items-center place-content-center">
+                <div className="col-start-1 row-start-1 -z-10 size-24 rounded-full bg-green-300 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]" />
+                <div className="col-start-1 row-start-1 flex place-items-center place-content-center">
+                  <div className="flex place-items-center place-content-center rounded-full bg-green-500 p-8">
+                    <CheckCircle className="text-white size-14" />
+                  </div>
+                </div>
               </div>
-              <div>
-                <Button asChild>
+              <div className="flex flex-col gap-3 text-center">
+                <span className="text-5xl font-semibold">App Published!</span>
+                <span className="text-2xl">Your app is now live 🎉</span>
+              </div>
+              <ViewMiniApp
+                miniapp={`https://${project}.miniapp-factory.marketplace.openxai.network/`}
+              >
+                <ProjectCard project={project} />
+              </ViewMiniApp>
+            </>
+          ) : (
+            <>
+              <div className="flex place-items-center place-content-center">
+                <div className="flex place-items-center place-content-center rounded-full bg-red-500 p-8">
+                  <AlertOctagon className="text-white size-14" />
+                </div>
+              </div>
+              <div className="flex flex-col gap-3 text-center max-w-[500px]">
+                <span className="text-5xl font-semibold">
+                  Deployment Failed
+                </span>
+                <span className="text-2xl">
+                  The app contains build errors, please work with the AI to
+                  produce a valid app.
+                </span>
+              </div>
+              <div className="flex flex-col gap-1 w-full max-w-[500px]">
+                <div className="flex place-items-center place-content-between">
+                  <span className="text-2xl font-semibold">Output Logs</span>
                   <Link
                     href={`https://github.com/miniapp-factory/${project}`}
                     target="_blank"
+                    className="flex place-items-center gap-1 text-blue-600"
                   >
-                    View On GitHub
+                    <span>GitHub</span>
+                    <ExternalLink />
                   </Link>
-                </Button>
-              </div>
-              <AccountAssociation project={project} />
-              <BaseBuild project={project} />
-              <div>
-                <CopyDomain project={project} />
-              </div>
-              <div>
-                <Share
-                  text={`Checkout this app I created using OpenxAI's #MiniAppFactory! https://${project}.miniapp-factory.marketplace.openxai.network \nCreate your own app at https://miniapp-factory.marketplace.openxai.network`}
+                </div>
+                <DeploymentLLMOutput
+                  deployment={lastDeployment}
+                  status={status}
+                  session={session}
+                  request={
+                    lastDeployment !== undefined &&
+                    lastDeployment.deployment_request !== null &&
+                    deploymentRequest !== undefined
+                      ? {
+                          id: lastDeployment.deployment_request,
+                          info: deploymentRequest,
+                        }
+                      : undefined
+                  }
                 />
               </div>
+            </>
+          )}
+          <div className="flex place-items-center place-content-center gap-2">
+            <BaseBuild project={project} />
+            <AccountAssociation project={project} />
+          </div>
+          <Share
+            text={`Check out my new app built with the OpenxAI #MiniAppFactory! https://${project}.miniapp-factory.marketplace.openxai.network/`}
+          />
+        </>
+      ) : (
+        <>
+          <div className="flex place-content-between place-items-center w-full max-w-[500px]">
+            <div className="p-2 rounded-full bg-blue-600">
+              <FactoryIcon className="text-white" />
             </div>
+            <Link href="/factory">
+              <div className="p-2 rounded-full bg-gray-400">
+                <ArrowLeft />
+              </div>
+            </Link>
+          </div>
+          <span className="text-5xl font-semibold">Build Your App!</span>
+          {lastDeployment !== undefined && (
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setDismissed(false);
+              }}
+            >
+              <ProjectCard project={project} />
+            </Button>
           )}
           <Textarea
             className="text-lg md:text-lg rounded-2xl border-2 h-[200px] max-w-[500px] border-gray-300 p-4"
-            placeholder="Describe your app idea..."
+            placeholder={
+              lastDeployment === undefined
+                ? "Describe your app idea..."
+                : "Describe your desired changes..."
+            }
             value={instructions}
             onChange={(e) => setInstructions(e.target.value)}
           />
@@ -430,5 +521,47 @@ Generate an app logo and update the app metadata title and description.`
         </>
       )}
     </main>
+  );
+}
+
+function ProjectCard({ project }: { project: string }) {
+  const { data: metadata } = useQuery({
+    queryKey: ["metadata", project],
+    queryFn: async () => {
+      return await fetch(`/metadata/${project}`)
+        .then((res) => res.json())
+        .then(
+          (data) => data as { name: string; description: string; image: string }
+        )
+        .catch(console.error);
+    },
+  });
+
+  return (
+    <div className="flex place-items-center gap-2 p-5 px-7 rounded-lg border border-black max-w-[500px]">
+      {!metadata?.image ? (
+        <Skeleton className="size-20 rounded-lg" />
+      ) : (
+        <img
+          src={metadata.image}
+          alt="project image"
+          className="size-20 rounded-lg"
+        />
+      )}
+      <div className="flex flex-col gap-2">
+        {!metadata?.name ? (
+          <Skeleton className="h-6 w-[150px]" />
+        ) : (
+          <span className="text-lg font-semibold">{metadata.name}</span>
+        )}
+        {!metadata?.description ? (
+          <Skeleton className="h-4 w-[250px]" />
+        ) : (
+          <span className="text-sm text-muted-foreground">
+            {metadata.description}
+          </span>
+        )}
+      </div>
+    </div>
   );
 }

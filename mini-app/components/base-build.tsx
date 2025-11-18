@@ -24,20 +24,25 @@ export function BaseBuild({ project }: { project: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button>Base Build</Button>
+        <Button className="h-auto px-10 py-4 bg-blue-700 rounded-4xl text-lg">
+          Base Build
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Base Build</DialogTitle>
+          <DialogTitle className="text-xl">Base Build</DialogTitle>
           <DialogDescription>
             Link this mini app with your Base Build account.
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
-            <Label htmlFor="basebuild-allowedaddress">Allowed Addresses</Label>
+            <Label htmlFor="basebuild-allowedaddress" className="ml-3">
+              Allowed Addresses
+            </Label>
             <Input
               id="basebuild-allowedaddress"
+              className="rounded-2xl"
               value={allowedAddresses}
               onChange={(e) => setAllowedAddresses(e.target.value)}
             />
@@ -45,9 +50,15 @@ export function BaseBuild({ project }: { project: string }) {
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary">Cancel</Button>
+            <Button
+              className="rounded-3xl h-auto py-3 px-6"
+              variant="secondary"
+            >
+              Cancel
+            </Button>
           </DialogClose>
           <Button
+            className="rounded-3xl h-auto py-3 px-6 bg-blue-700"
             onClick={() => {
               fetch("/api/factory/project/base_build", {
                 method: "POST",

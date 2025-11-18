@@ -28,42 +28,66 @@ export function AccountAssociation({ project }: { project: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button>Farcaster</Button>
+        <Button
+          className="h-auto px-10 py-4 rounded-4xl text-lg"
+          variant="outline"
+        >
+          Farcaster
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Farcaster</DialogTitle>
+          <DialogTitle className="text-xl">Farcaster</DialogTitle>
           <DialogDescription>
             Link this mini app with your Farcaster account.
           </DialogDescription>
         </DialogHeader>
         <Tabs defaultValue="manual">
-          <TabsList>
-            <TabsTrigger value="manual">Manual</TabsTrigger>
-            <TabsTrigger value="json">JSON</TabsTrigger>
+          <TabsList className="bg-white border rounded-2xl">
+            <TabsTrigger
+              className="data-[state=active]:bg-blue-700 data-[state=active]:text-white py-2 px-3 data-[state=active]:rounded-2xl"
+              value="manual"
+            >
+              Manual
+            </TabsTrigger>
+            <TabsTrigger
+              className="data-[state=active]:bg-blue-700 data-[state=active]:text-white py-2 px-3 data-[state=active]:rounded-2xl"
+              value="json"
+            >
+              JSON
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="manual">
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-1">
-                <Label htmlFor="farcaster-header">Header</Label>
+                <Label htmlFor="farcaster-header" className="ml-3">
+                  Header
+                </Label>
                 <Input
                   id="farcaster-header"
+                  className="rounded-2xl"
                   value={header}
                   onChange={(e) => setHeader(e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <Label htmlFor="farcaster-payload">Payload</Label>
+                <Label htmlFor="farcaster-payload" className="ml-3">
+                  Payload
+                </Label>
                 <Input
                   id="farcaster-payload"
+                  className="rounded-2xl"
                   value={payload}
                   onChange={(e) => setPayload(e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <Label htmlFor="farcaster-signature">Signature</Label>
+                <Label htmlFor="farcaster-signature" className="ml-3">
+                  Signature
+                </Label>
                 <Input
                   id="farcaster-signature"
+                  className="rounded-2xl"
                   value={signature}
                   onChange={(e) => setSignature(e.target.value)}
                 />
@@ -94,9 +118,11 @@ export function AccountAssociation({ project }: { project: string }) {
           <TabsContent value="json">
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-1">
-                <Label htmlFor="farcaster-json">JSON</Label>
+                <Label htmlFor="farcaster-json" className="ml-3">
+                  JSON
+                </Label>
                 <Textarea
-                  className="max-w-full"
+                  className="max-w-full rounded-2xl"
                   id="farcaster-json"
                   value={json}
                   onChange={(e) => setJson(e.target.value)}
@@ -107,9 +133,15 @@ export function AccountAssociation({ project }: { project: string }) {
         </Tabs>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary">Cancel</Button>
+            <Button
+              className="rounded-3xl h-auto py-3 px-6"
+              variant="secondary"
+            >
+              Cancel
+            </Button>
           </DialogClose>
           <Button
+            className="rounded-3xl h-auto py-3 px-6 bg-blue-700"
             onClick={() => {
               const account_association = json
                 ? JSON.parse(json).accountAssociation
