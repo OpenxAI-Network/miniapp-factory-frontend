@@ -34,7 +34,10 @@ export function ProjectShowcase({ project }: { project: string }) {
           </div>
         ) : (
           <div className="bg-white/80 rounded-lg px-1 py-0.5 place-items-center text-center">
-            <span className="text-lg font-semibold">{metadata.name}</span>
+            <span className="max-md:text-xs font-semibold">
+              {metadata.name.substring(0, 25)}
+              {metadata.name.length > 25 ? "..." : ""}
+            </span>
           </div>
         )}
       </div>

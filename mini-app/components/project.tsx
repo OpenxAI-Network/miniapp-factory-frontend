@@ -177,7 +177,7 @@ export function Project({ project }: { project: string }) {
     return () => clearInterval(interval);
   }, [lastDeployment]);
 
-  const [dismissed, setDismissed] = useState<boolean>(false);
+  const [dismissed, setDismissed] = useState<boolean>(true);
 
   return (
     <main className="flex flex-col gap-3 place-items-center place-content-between px-4 py-4 grow">
@@ -467,7 +467,9 @@ export function Project({ project }: { project: string }) {
           <span className="text-5xl font-semibold">Build Your App!</span>
           {lastDeployment !== undefined && (
             <Button
+              className="flex whitespace-normal"
               variant="ghost"
+              size="ghost"
               onClick={() => {
                 setDismissed(false);
               }}

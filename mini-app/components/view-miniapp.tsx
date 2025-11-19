@@ -16,7 +16,12 @@ export function ViewMiniApp({
 
   if (!isInMiniApp) {
     return (
-      <Button variant="ghost" asChild>
+      <Button
+        className="flex whitespace-normal"
+        variant="ghost"
+        size="ghost"
+        asChild
+      >
         <Link href={miniapp} target="_blank">
           {children}
         </Link>
@@ -26,10 +31,12 @@ export function ViewMiniApp({
 
   return (
     <Button
+      className="flex whitespace-normal"
+      variant="ghost"
+      size="ghost"
       onClick={() => {
         sdk.actions.openMiniApp({ url: miniapp });
       }}
-      variant="ghost"
     >
       {children}
     </Button>

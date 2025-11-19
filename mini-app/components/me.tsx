@@ -23,24 +23,6 @@ import { ProjectShowcase } from "./project-showcase";
 
 export function Me({ user }: { user: string | null }) {
   const { data: projects } = useQuery({
-    initialData: [
-      "game",
-      "gdsgsd",
-      "gdsgdhfdh",
-      "bsb",
-      "game",
-      "gdsgsd",
-      "gdsgdhfdh",
-      "bsb",
-      "game",
-      "gdsgsd",
-      "gdsgdhfdh",
-      "bsb",
-      "game",
-      "gdsgsd",
-      "gdsgdhfdh",
-      "bsb",
-    ],
     queryKey: ["user_projects", user ?? ""],
     enabled: !!user,
     queryFn: async () => {
@@ -82,11 +64,11 @@ export function Me({ user }: { user: string | null }) {
       </div>
       <div className="flex flex-col gap-1 mt-8 ml-4 w-full max-w-[500px]">
         <span className="text-5xl font-semibold">Hi, User</span>
-        <span className="text-xl">ID: {user}</span>
+        <span className="text-sm break-all">{user}</span>
       </div>
       <div className="flex flex-col gap-1 mt-4 w-full max-w-[500px] grow">
         <span className="ml-8 text-lg font-semibold">Your Mini Apps</span>
-        <ScrollArea className="w-full grow h-[500px] px-3">
+        <ScrollArea className="w-full grow h-0 px-3">
           <div className="grid grid-cols-3 gap-3">
             {projects?.map((project) => (
               <Link key={project} href={`/factory/project/${project}`}>

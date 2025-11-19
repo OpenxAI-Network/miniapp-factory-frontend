@@ -83,9 +83,6 @@ export default function HomePage() {
           <Button asChild>
             <Link href="/waitlist">Join the waitlist</Link>
           </Button>
-          <Share
-            text={`Create your own Farcaster mini app in seconds! ${process.env.NEXT_PUBLIC_URL}`}
-          />
         </div>
       </main>
       <Footer />

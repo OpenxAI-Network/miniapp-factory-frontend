@@ -50,7 +50,9 @@ export function Share({ text }: { text: string }) {
               href={
                 isInMiniApp
                   ? "#"
-                  : `https://farcaster.xyz/~/compose?text=${text}`
+                  : `https://farcaster.xyz/~/compose?text=${encodeURIComponent(
+                      text
+                    )}`
               }
               target={isInMiniApp ? undefined : "_blank"}
             >
@@ -86,7 +88,9 @@ export function Share({ text }: { text: string }) {
             asChild
           >
             <Link
-              href={`https://x.com/intent/post?text=${text}`}
+              href={`https://x.com/intent/post?text=${encodeURIComponent(
+                text
+              )}`}
               target="_blank"
             >
               <svg
