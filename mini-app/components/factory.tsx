@@ -26,6 +26,8 @@ import {
   TableRow,
 } from "./ui/table";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { Skeleton } from "./ui/skeleton";
 
 const rewards = [
   { deployments: 7000, reward: 7000 },
@@ -37,13 +39,13 @@ const rewards = [
   { deployments: 1000, reward: 1000 },
 ];
 export function Factory({ user }: { user: string | null }) {
-  const { data: userInfo } = useQuery({
-    queryKey: ["user", user ?? ""],
+  const { data: projects } = useQuery({
+    queryKey: ["user_projects", user ?? ""],
     enabled: !!user,
     queryFn: async () => {
-      return fetch("/api/factory/user/info")
+      return fetch("/api/factory/user/projects")
         .then((res) => res.json())
-        .then((data) => data as { id: string; projects: string[] })
+        .then((data) => data as string[])
         .catch(console.error);
     },
   });
@@ -63,22 +65,38 @@ export function Factory({ user }: { user: string | null }) {
     },
   });
 
-  const totalProjects = 3789;
+  const { data: totalProjects } = useQuery({
+    queryKey: ["totalProjects"],
+    queryFn: async () => {
+      return fetch(`/api/showcase/projects/count`)
+        .then((res) => res.json())
+        .then((data) => data as number)
+        .catch(console.error);
+    },
+  });
 
   return (
     <main className="flex flex-col gap-3 place-items-center place-content-between px-4 py-4 grow">
       <div className="flex place-content-between place-items-center w-full max-w-[500px]">
-        <div className="p-2 rounded-full bg-blue-600">
-          <FactoryIcon className="text-white" />
-        </div>
-        <div className="p-2 rounded-full bg-gray-400">
-          <User2 />
-        </div>
+        <Link href="/">
+          <div className="p-2 rounded-full bg-blue-600">
+            <FactoryIcon className="text-white" />
+          </div>
+        </Link>
+        <Link href="/factory/me">
+          <div className="p-2 rounded-full bg-gray-400">
+            <User2 />
+          </div>
+        </Link>
       </div>
       <div className="flex flex-col gap-4 place-items-center w-full">
         <div className="flex flex-col gap-1 place-items-center text-center">
           <span className="text-5xl font-semibold">
-            {totalProjects.toLocaleString("en-us")}
+            {totalProjects ? (
+              totalProjects.toLocaleString("en-us")
+            ) : (
+              <Skeleton className="h-8 w-[100px]" />
+            )}
           </span>
           <span className="text-2xl">Apps Deployed</span>
         </div>
@@ -94,15 +112,19 @@ export function Factory({ user }: { user: string | null }) {
                   key={i}
                   className={cn(
                     "text-muted-foreground",
-                    totalProjects > reward.deployments && "text-black",
-                    totalProjects < reward.deployments &&
+                    totalProjects !== undefined &&
+                      totalProjects > reward.deployments &&
+                      "text-black",
+                    totalProjects !== undefined &&
+                      totalProjects < reward.deployments &&
                       totalProjects + 1000 > reward.deployments &&
                       "bg-blue-700 text-white"
                   )}
                 >
                   <TableCell>
                     <div className="flex gap-3 place-items-center">
-                      {totalProjects > reward.deployments ? (
+                      {totalProjects !== undefined &&
+                      totalProjects > reward.deployments ? (
                         <div className="rounded-full p-1 bg-green-600">
                           <Check className="size-4 text-white" />
                         </div>
@@ -123,82 +145,90 @@ export function Factory({ user }: { user: string | null }) {
           </Table>
         </div>
       </div>
-      <Dialog>
-        <DialogTrigger>
+      {projects && projects.length > 0 ? (
+        <Link href="/factory/me">
           <Button className="bg-blue-700 text-white text-lg rounded-3xl px-12 py-7">
             Build My App
           </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="text-xl">Create new mini app</DialogTitle>
-            <DialogDescription>
-              Your mini app can be accessed through https://
-              {"{name}"}
-              .miniapp-factory.marketplace.openxai.network. The name cannot be
-              changed afterward.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex flex-col gap-1">
-            <Label htmlFor="miniapp-project-name" className="ml-3">
-              Mini App Name
-            </Label>
-            <Input
-              id="miniapp-project-name"
-              className="rounded-2xl"
-              aria-invalid={
-                !new RegExp(/^[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?$/).test(
-                  projectName
-                ) || projectAvailable === false
-              }
-              value={projectName}
-              onChange={(e) =>
-                setProjectName(e.target.value.toLowerCase().replace(" ", "-"))
-              }
-            />
-          </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button
-                className="rounded-3xl h-auto py-3 px-6"
-                variant="outline"
-              >
-                Cancel
-              </Button>
-            </DialogClose>
-            <Button
-              className="rounded-3xl h-auto py-3 px-6 bg-blue-700"
-              onClick={() => {
-                setCreatingProject(true);
-                fetch("/api/factory/project/create", {
-                  method: "POST",
-                  headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({ project: projectName }),
-                })
-                  .then((res) => {
-                    if (res.ok) {
-                      router.push(`/factory/${projectName}`);
-                    }
-                  })
-                  .catch(console.error)
-                  .finally(() => setCreatingProject(false));
-              }}
-              disabled={
-                creatingProject ||
-                !new RegExp(/^[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?$/).test(
-                  projectName
-                ) ||
-                projectAvailable === false
-              }
-            >
-              Create
+        </Link>
+      ) : (
+        <Dialog>
+          <DialogTrigger>
+            <Button className="bg-blue-700 text-white text-lg rounded-3xl px-12 py-7">
+              Build My App
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="text-xl">Create new mini app</DialogTitle>
+              <DialogDescription>
+                Your mini app can be accessed through https://
+                {"{name}"}
+                .miniapp-factory.marketplace.openxai.network. The name cannot be
+                changed afterward.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col gap-1">
+              <Label htmlFor="miniapp-project-name" className="ml-3">
+                Mini App Name
+              </Label>
+              <Input
+                id="miniapp-project-name"
+                className="rounded-2xl"
+                aria-invalid={
+                  !new RegExp(/^[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?$/).test(
+                    projectName
+                  ) || projectAvailable === false
+                }
+                value={projectName}
+                onChange={(e) =>
+                  setProjectName(e.target.value.toLowerCase().replace(" ", "-"))
+                }
+              />
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button
+                  className="rounded-3xl h-auto py-3 px-6"
+                  variant="outline"
+                >
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button
+                className="rounded-3xl h-auto py-3 px-6 bg-blue-700"
+                onClick={() => {
+                  setCreatingProject(true);
+                  fetch("/api/factory/project/create", {
+                    method: "POST",
+                    headers: {
+                      Accept: "application/json",
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ project: projectName }),
+                  })
+                    .then((res) => {
+                      if (res.ok) {
+                        router.push(`/factory/project/${projectName}`);
+                      }
+                    })
+                    .catch(console.error)
+                    .finally(() => setCreatingProject(false));
+                }}
+                disabled={
+                  creatingProject ||
+                  !new RegExp(/^[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?$/).test(
+                    projectName
+                  ) ||
+                  projectAvailable === false
+                }
+              >
+                Create
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </main>
   );
 }

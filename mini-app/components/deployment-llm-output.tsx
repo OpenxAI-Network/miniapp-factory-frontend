@@ -42,7 +42,7 @@ export function DeploymentLLMOutput({
           .catch(console.error);
       } else {
         return fetch(
-          `/api/factory/project/llm_output?deployment=${deployment?.id}`
+          `/api/factory/deployment/llm_output?deployment=${deployment?.id}`
         )
           .then((res) => res.json())
           .then((data) => data as string)

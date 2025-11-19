@@ -128,6 +128,31 @@ export function Project({ project }: { project: string }) {
     }
   }, [carousel, status]);
 
+  const { data: queuePosition } = useQuery({
+    queryKey: ["deployment_queue", lastDeployment?.id ?? 0],
+    enabled: lastDeployment !== undefined,
+    queryFn: async () => {
+      return fetch(
+        `/api/factory/deployment/queue?deployment=${lastDeployment?.id}`
+      )
+        .then((res) => res.json())
+        .then((data) => data as number)
+        .catch(console.error);
+    },
+    refetchInterval: 10_000, // 10 seconds
+  });
+
+  const { data: workers } = useQuery({
+    queryKey: ["workers"],
+    queryFn: async () => {
+      return fetch(`/api/showcase/queue/workers`)
+        .then((res) => res.json())
+        .then((data) => data as number)
+        .catch(console.error);
+    },
+    refetchInterval: 10_000, // 10 seconds
+  });
+
   const [progress, setProgress] = useState<number>(0);
   useEffect(() => {
     if (!lastDeployment) {
@@ -163,9 +188,11 @@ export function Project({ project }: { project: string }) {
       status === Status.unknown ? (
         <>
           <div className="flex place-content-between place-items-center w-full max-w-[500px]">
-            <div className="p-2 rounded-full bg-blue-600">
-              <FactoryIcon className="text-white" />
-            </div>
+            <Link href="/">
+              <div className="p-2 rounded-full bg-blue-600">
+                <FactoryIcon className="text-white" />
+              </div>
+            </Link>
             <Link href="/factory">
               <div className="p-2 rounded-full bg-gray-400">
                 <ArrowLeft />
@@ -272,13 +299,33 @@ export function Project({ project }: { project: string }) {
             </Carousel>
             <span className="text-xl font-semibold">{status}...</span>
           </div>
-          <div className="flex flex-col place-items-center gap-3 w-full max-w-[500px]">
-            <Progress
-              className="[&>*]:bg-linear-to-r [&>*]:from-[#CAFA54] [&>*]:to-[#0016FF]"
-              value={progress}
-            />
-            <span className="text-xl">{progress.toFixed(0)}%</span>
-          </div>
+          {status === Status.queued ? (
+            <div className="flex flex-col place-items-center gap-3 w-full max-w-[500px]">
+              {queuePosition !== undefined ? (
+                <span className="text-2xl font-semibold">
+                  {queuePosition} projects in front of you
+                </span>
+              ) : (
+                <Skeleton className="h-6 w-[250px]" />
+              )}
+              {queuePosition !== undefined && workers !== undefined ? (
+                <span className="text-lg text-muted-foreground">
+                  Estimated wait: up to{" "}
+                  {Math.round(((queuePosition + 1) * 10) / workers)} minutes
+                </span>
+              ) : (
+                <Skeleton className="h-4 w-[350px]" />
+              )}
+            </div>
+          ) : (
+            <div className="flex flex-col place-items-center gap-3 w-full max-w-[500px]">
+              <Progress
+                className="[&>*]:bg-linear-to-r [&>*]:from-[#CAFA54] [&>*]:to-[#0016FF]"
+                value={progress}
+              />
+              <span className="text-xl">{progress.toFixed(0)}%</span>
+            </div>
+          )}
           <div className="flex flex-col gap-1 w-full max-w-[500px]">
             <div className="flex place-items-center place-content-between">
               <div className="flex place-items-center gap-2">
@@ -315,9 +362,11 @@ export function Project({ project }: { project: string }) {
         (status === Status.deployed || status === Status.error) ? (
         <>
           <div className="flex place-content-between place-items-center w-full max-w-[500px]">
-            <div className="p-2 rounded-full bg-blue-600">
-              <FactoryIcon className="text-white" />
-            </div>
+            <Link href="/">
+              <div className="p-2 rounded-full bg-blue-600">
+                <FactoryIcon className="text-white" />
+              </div>
+            </Link>
             <div
               className="p-2 rounded-full bg-gray-400"
               onClick={() => {
@@ -404,9 +453,11 @@ export function Project({ project }: { project: string }) {
       ) : (
         <>
           <div className="flex place-content-between place-items-center w-full max-w-[500px]">
-            <div className="p-2 rounded-full bg-blue-600">
-              <FactoryIcon className="text-white" />
-            </div>
+            <Link href="/">
+              <div className="p-2 rounded-full bg-blue-600">
+                <FactoryIcon className="text-white" />
+              </div>
+            </Link>
             <Link href="/factory">
               <div className="p-2 rounded-full bg-gray-400">
                 <ArrowLeft />
@@ -511,6 +562,7 @@ Generate an app logo and update the app metadata title and description.`
                 .then(() => {
                   setInstructions("");
                   refetchHistory();
+                  setDismissed(false);
                 })
                 .catch(console.error);
             }}
