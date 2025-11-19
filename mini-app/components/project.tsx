@@ -70,6 +70,7 @@ export function Project({ project }: { project: string }) {
       return fetch(`/api/factory/project/history?project=${project}`)
         .then((res) => res.json())
         .then((data) => data as Deployment[])
+        .then((deployments) => deployments.sort((d1, d2) => d1.id - d2.id))
         .catch(console.error);
     },
     refetchInterval: 1_000, // 1 second
