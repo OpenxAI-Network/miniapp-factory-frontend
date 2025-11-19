@@ -92,7 +92,7 @@ export function Factory({ user }: { user: string | null }) {
       <div className="flex flex-col gap-4 place-items-center w-full">
         <div className="flex flex-col gap-1 place-items-center text-center">
           <span className="text-5xl font-semibold">
-            {totalProjects ? (
+            {totalProjects !== undefined ? (
               totalProjects.toLocaleString("en-us")
             ) : (
               <Skeleton className="h-8 w-[100px]" />

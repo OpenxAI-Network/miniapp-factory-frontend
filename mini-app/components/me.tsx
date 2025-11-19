@@ -55,7 +55,7 @@ export function Me({ user }: { user: string | null }) {
           <div className="p-2 rounded-full bg-blue-600">
             <FactoryIcon className="text-white" />
           </div>
-        </Link>{" "}
+        </Link>
         <Link href="/factory">
           <div className="p-2 rounded-full bg-gray-400">
             <ArrowLeft />

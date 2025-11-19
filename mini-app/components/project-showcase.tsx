@@ -17,9 +17,9 @@ export function ProjectShowcase({ project }: { project: string }) {
   });
 
   return (
-    <div className="grid place-items-center place-content-center grow rounded-2xl">
+    <div className="grid place-items-center place-content-center size-full rounded-2xl aspect-square">
       {!metadata?.image ? (
-        <Skeleton className="col-start-1 row-start-1 -z-10 size-full rounded-2xl aspect-square" />
+        <Skeleton className="col-start-1 row-start-1 -z-10 size-full rounded-2xl" />
       ) : (
         <img
           src={metadata.image}
@@ -30,7 +30,7 @@ export function ProjectShowcase({ project }: { project: string }) {
       <div className="col-start-1 row-start-1 size-full flex place-items-end place-content-center p-3">
         {!metadata?.name ? (
           <div className="bg-white/80 rounded-lg px-1 py-0.5 place-items-center">
-            <Skeleton className="h-4 w-[120px]" />
+            <Skeleton className="h-4 w-[80%]" />
           </div>
         ) : (
           <div className="bg-white/80 rounded-lg px-1 py-0.5 place-items-center text-center">

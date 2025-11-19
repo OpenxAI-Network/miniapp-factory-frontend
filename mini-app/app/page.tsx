@@ -1,13 +1,9 @@
-import { Share } from "@/components/share";
 import { Button } from "@/components/ui/button";
 import { description, title } from "@/lib/metadata";
 import { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
-import Icon from "@/public/icon.png";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Info } from "lucide-react";
-import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 
 export const dynamic = "force-dynamic";
@@ -44,48 +40,31 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function HomePage() {
   return (
-    <>
-      <Header />
-      <main className="flex flex-col gap-8 place-items-center px-4">
-        <div className="flex flex-col gap-1 place-items-center text-center">
-          <div className="flex gap-1 place-items-center">
-            <span className="text-2xl">Mini App Factory</span>
-            <span className="px-1.5 py-0.5 rounded-full bg-primary text-primary-foreground text-xs">
-              BETA
-            </span>
-          </div>
-          <span className="text-muted-foreground">
-            AI-powered application to allow creation of Farcaster mini apps with
-            natural language.
-          </span>
-        </div>
-        <Image
-          className="size-[200px]"
-          src={Icon}
-          alt="icon"
-          width={200}
-          height={200}
-        />
+    <div className="font-sans min-h-screen flex flex-col place-content-between gap-5 bg-[url(/background.png)] bg-center bg-no-repeat bg-contain max-md:bg-cover">
+      <main className="flex flex-col gap-8 place-items-center grow place-content-end px-4">
         <div className="flex flex-col gap-3">
-          {/* <Button asChild>
-          <Link href="/factory">Enter the factory</Link>
-        </Button> */}
-          <Alert className="max-w-[500px]">
+          <Alert className="max-w-[500px] max-md:max-w-screen">
             <Info />
             <AlertTitle>Factory Closed</AlertTitle>
             <AlertDescription>
-              A huge thank you to everyone participating in the beta! Based on
-              the feedback we&apos;ve received, we are implementing large
-              architectural and user experience improvements to the factory.
-              Please look forward to the new version!
+              Please look forward to the grand re-opening of the factory on 20
+              November!
             </AlertDescription>
           </Alert>
-          <Button asChild>
-            <Link href="/waitlist">Join the waitlist</Link>
-          </Button>
+          <div className="flex gap-4 max-md:flex-col">
+            <Button
+              className="bg-blue-700 text-white text-lg rounded-3xl px-12 py-7 opacity-70 cursor-not-allowed"
+              asChild
+            >
+              <Link href="#">Enter the Factory</Link>
+            </Button>
+            <Button className="text-lg rounded-3xl px-12 py-7" asChild>
+              <Link href="/waitlist">Join the Waitlist</Link>
+            </Button>
+          </div>
         </div>
       </main>
       <Footer />
-    </>
+    </div>
   );
 }

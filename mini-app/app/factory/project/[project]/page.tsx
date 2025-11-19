@@ -7,5 +7,9 @@ export default async function ProjectPage({
 }) {
   const { project } = await params;
 
-  return <Project project={project} />;
+  return (
+    <div className="font-sans min-h-screen flex flex-col place-content-between gap-2">
+      <Project project={project} />
+    </div>
+  );
 }

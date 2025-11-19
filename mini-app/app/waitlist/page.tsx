@@ -4,7 +4,7 @@ import { Waitlist } from "@/components/waitlist";
 
 export default function WaitlistPage() {
   return (
-    <>
+    <div className="font-sans min-h-screen flex flex-col place-content-between gap-2">
       <Header />
       <main className="flex flex-col gap-3 place-items-center px-4">
         <div className="flex flex-col gap-3 place-items-center text-center">
@@ -17,7 +17,6 @@ export default function WaitlistPage() {
         </div>
         <Waitlist />
       </main>
-      <Footer />
-    </>
+    </div>
   );
 }

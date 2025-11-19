@@ -36,16 +36,16 @@ export function Marketplace() {
       <div className="flex flex-col gap-1 mt-8 ml-4 w-full max-w-[500px]">
         <span className="text-4xl font-semibold">Marketplace</span>
       </div>
-      <div className="flex flex-col gap-1 mt-4 w-full max-w-[500px] grow">
-        <span className="ml-8 text-lg font-semibold">Featured</span>
+      <div className="flex flex-col gap-1 mt-4 w-full max-w-[500px]">
+        <span className="ml-4 text-lg font-semibold">Featured</span>
         <div className="grid grid-cols-3 gap-3">
           {projects
             ?.toReversed()
-            .slice(0, 6)
+            .slice(0, 3)
             .map((project) => (
               <ViewMiniApp
                 key={project.id}
-                miniapp={`https://${project}.miniapp-factory.marketplace.openxai.network/`}
+                miniapp={`https://${project.name}.miniapp-factory.marketplace.openxai.network/`}
               >
                 <ProjectShowcase project={project.name} />
               </ViewMiniApp>
@@ -53,13 +53,13 @@ export function Marketplace() {
         </div>
       </div>
       <div className="flex flex-col gap-1 mt-4 w-full max-w-[500px] grow">
-        <span className="ml-8 text-lg font-semibold">Latest</span>
+        <span className="ml-4 text-lg font-semibold">Latest</span>
         <ScrollArea className="w-full grow h-0 px-3">
           <div className="grid grid-cols-3 gap-3">
             {projects?.map((project) => (
               <ViewMiniApp
                 key={project.id}
-                miniapp={`https://${project}.miniapp-factory.marketplace.openxai.network/`}
+                miniapp={`https://${project.name}.miniapp-factory.marketplace.openxai.network/`}
               >
                 <ProjectShowcase project={project.name} />
               </ViewMiniApp>
