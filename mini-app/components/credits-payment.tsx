@@ -10,8 +10,10 @@ import {
 import { Address, erc20Abi } from "viem";
 import {
   useAccount,
+  useChainId,
   usePublicClient,
   useReadContract,
+  useSwitchChain,
   useWriteContract,
 } from "wagmi";
 
@@ -28,9 +30,10 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import { toast } from "sonner";
-import { useAppKit } from "@reown/appkit/react";
+import { useAppKit, useDisconnect } from "@reown/appkit/react";
 import { useMiniAppContext } from "./context/miniapp-provider";
 import Link from "next/link";
+import { base } from "viem/chains";
 
 export function CreditsPayment({
   user,
@@ -68,6 +71,7 @@ export function CreditsPayment({
 
   const tokenAddress = "0xA66B448f97CBf58D12f00711C02bAC2d9EAC6f7f" as const;
   const { data: balance, refetch: refetchBalance } = useReadContract({
+    chainId: base.id,
     abi: erc20Abi,
     address: tokenAddress,
     functionName: "balanceOf",
@@ -83,10 +87,16 @@ export function CreditsPayment({
   const [performingTransaction, setPerformingTransaction] =
     useState<boolean>(false);
   const { writeContractAsync } = useWriteContract();
-  const publicClient = usePublicClient();
+  const publicClient = usePublicClient({
+    chainId: base.id,
+  });
 
   const { open } = useAppKit();
   const { sdk, isInMiniApp } = useMiniAppContext();
+
+  const chainId = useChainId();
+  const { switchChainAsync } = useSwitchChain();
+  const { disconnect } = useDisconnect();
 
   return (
     <Dialog
@@ -199,8 +209,16 @@ export function CreditsPayment({
                         return;
                       }
 
+                      if (chainId !== base.id) {
+                        switchChainAsync({ chainId: base.id }).catch(() =>
+                          disconnect()
+                        );
+                        return;
+                      }
+
                       setPerformingTransaction(true);
                       writeContractAsync({
+                        chainId: base.id,
                         abi: erc20Abi,
                         address: tokenAddress,
                         functionName: "transfer",

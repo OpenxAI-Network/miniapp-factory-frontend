@@ -6,7 +6,7 @@ import { Config, cookieToInitialState, WagmiProvider } from "wagmi";
 import { projectId, wagmiAdapter } from "@/lib/web3-config";
 import { Toaster } from "../ui/sonner";
 import { createAppKit } from "@reown/appkit/react";
-import { base } from "@reown/appkit/networks";
+import { base, mainnet } from "@reown/appkit/networks";
 
 const queryClient = new QueryClient();
 
@@ -23,7 +23,7 @@ const metadata = {
 const modal = createAppKit({
   adapters: [wagmiAdapter],
   projectId,
-  networks: [base],
+  networks: [mainnet, base],
   defaultNetwork: base,
   metadata: metadata,
   themeMode: "light",
