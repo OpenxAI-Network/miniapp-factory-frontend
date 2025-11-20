@@ -400,11 +400,14 @@ export function Project({ project }: { project: string }) {
                 <span className="text-5xl font-semibold">App Published!</span>
                 <span className="text-2xl">Your app is now live 🎉</span>
               </div>
-              <ViewMiniApp
-                miniapp={`https://${project}.miniapp-factory.marketplace.openxai.network/`}
-              >
-                <ProjectCard project={project} />
-              </ViewMiniApp>
+              <div className="flex flex-col place-items-center place-content-center gap-1">
+                <span className="text-xl">View App</span>
+                <ViewMiniApp
+                  miniapp={`https://${project}.miniapp-factory.marketplace.openxai.network/`}
+                >
+                  <ProjectCard project={project} />
+                </ViewMiniApp>
+              </div>
             </>
           ) : (
             <>
@@ -518,16 +521,19 @@ export function Project({ project }: { project: string }) {
             </Dialog>
           </div>
           {lastDeployment !== undefined && (
-            <Button
-              className="flex whitespace-normal"
-              variant="ghost"
-              size="ghost"
-              onClick={() => {
-                setDismissed(false);
-              }}
-            >
-              <ProjectCard project={project} />
-            </Button>
+            <div className="flex flex-col place-items-center place-content-center gap-1">
+              <span className="text-xl">View last deployment</span>
+              <Button
+                className="flex whitespace-normal"
+                variant="ghost"
+                size="ghost"
+                onClick={() => {
+                  setDismissed(false);
+                }}
+              >
+                <ProjectCard project={project} />
+              </Button>
+            </div>
           )}
           <Textarea
             className="text-lg md:text-lg rounded-2xl border-2 h-[200px] max-w-[500px] border-gray-300 p-4"

@@ -20,6 +20,7 @@ export function Me({ user }: { user: string | null }) {
         .then((data) => data as string[])
         .catch(console.error);
     },
+    refetchInterval: 10_000, // 10 seconds
   });
 
   const [createProject, setCreateProject] = useState<boolean>(false);

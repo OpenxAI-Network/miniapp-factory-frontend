@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, FactoryIcon } from "lucide-react";
 import Link from "next/link";
 import { ScrollArea } from "./ui/scroll-area";
-import { ProjectShowcase } from "./project-showcase";
 import { ViewMiniApp } from "./view-miniapp";
 
 const featured: string[] = [];
@@ -19,6 +18,7 @@ export function Marketplace() {
         .then((projects) => projects.sort((p1, p2) => p2.id - p1.id))
         .catch(console.error);
     },
+    refetchInterval: 10_000, // 10 seconds
   });
 
   return (
@@ -43,12 +43,7 @@ export function Marketplace() {
           <span className="ml-4 text-lg font-semibold">Featured</span>
           <div className="grid grid-cols-3 gap-3">
             {featured.map((project) => (
-              <ViewMiniApp
-                key={project}
-                miniapp={`https://${project}.miniapp-factory.marketplace.openxai.network/`}
-              >
-                <ProjectShowcase project={project} />
-              </ViewMiniApp>
+              <ProjectShowcase key={project} project={project} />
             ))}
           </div>
         </div>
@@ -58,16 +53,50 @@ export function Marketplace() {
         <ScrollArea className="w-full grow h-0 px-3">
           <div className="grid grid-cols-3 gap-3">
             {projects?.map((project) => (
-              <ViewMiniApp
-                key={project.id}
-                miniapp={`https://${project.name}.miniapp-factory.marketplace.openxai.network/`}
-              >
-                <ProjectShowcase project={project.name} />
-              </ViewMiniApp>
+              <ProjectShowcase key={project.name} project={project.name} />
             ))}
           </div>
         </ScrollArea>
       </div>
     </main>
+  );
+}
+function ProjectShowcase({ project }: { project: string }) {
+  const { data: metadata } = useQuery({
+    queryKey: ["metadata", project],
+    queryFn: async () => {
+      return await fetch(`/metadata/${project}`)
+        .then((res) => res.json())
+        .then(
+          (data) => data as { name: string; description: string; image: string }
+        )
+        .catch(console.error);
+    },
+  });
+
+  if (!metadata || metadata.name === "Mini App Factory App") {
+    return <></>;
+  }
+
+  return (
+    <ViewMiniApp
+      miniapp={`https://${project}.miniapp-factory.marketplace.openxai.network/`}
+    >
+      <div className="grid place-items-center place-content-center size-full rounded-2xl aspect-square">
+        <img
+          src={metadata.image}
+          alt="project image"
+          className="col-start-1 row-start-1 -z-10 size-full rounded-2xl"
+        />
+        <div className="col-start-1 row-start-1 size-full flex place-items-end place-content-center p-3">
+          <div className="bg-white/80 rounded-lg px-1 py-0.5 place-items-center text-center">
+            <span className="max-md:text-xs font-semibold">
+              {metadata.name.substring(0, 25)}
+              {metadata.name.length > 25 ? "..." : ""}
+            </span>
+          </div>
+        </div>
+      </div>
+    </ViewMiniApp>
   );
 }

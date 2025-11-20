@@ -2,10 +2,7 @@ import { Button } from "@/components/ui/button";
 import { description, title } from "@/lib/metadata";
 import { Metadata } from "next";
 import Link from "next/link";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Info } from "lucide-react";
 import { Footer } from "@/components/footer";
-import { Share } from "@/components/share";
 
 export const dynamic = "force-dynamic";
 
@@ -51,7 +48,7 @@ export default function HomePage() {
             <Link href="/factory">Enter the Factory</Link>
           </Button>
           <Button className="text-lg rounded-3xl px-12 py-7" asChild>
-            <Link href="/waitlist">Join the Waitlist</Link>
+            <Link href="/marketplace">Marketplace</Link>
           </Button>
         </div>
       </main>
