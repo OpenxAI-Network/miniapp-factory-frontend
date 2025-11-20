@@ -18,14 +18,54 @@ import { Skeleton } from "./ui/skeleton";
 import { CreateProject } from "./create-project";
 
 const rewards = [
-  { deployments: 7000, reward: 7000 },
-  { deployments: 6000, reward: 6000 },
-  { deployments: 5000, reward: 5000 },
-  { deployments: 4000, reward: 4000 },
-  { deployments: 3000, reward: 3000 },
-  { deployments: 2000, reward: 2000 },
-  { deployments: 1000, reward: 1000 },
+  {
+    deploymentsMin: 9001,
+    deploymentsMax: 10000,
+    reward: "* Up to $6 USDT + 1 OPENX",
+  },
+  {
+    deploymentsMin: 8001,
+    deploymentsMax: 9000,
+    reward: "* Up to $7 USDT + 2 OPENX",
+  },
+  {
+    deploymentsMin: 7001,
+    deploymentsMax: 8000,
+    reward: "* Up to $8 USDT + 2 OPENX",
+  },
+  {
+    deploymentsMin: 6001,
+    deploymentsMax: 7000,
+    reward: "* Up to $9 USDT + 2 OPENX",
+  },
+  {
+    deploymentsMin: 5001,
+    deploymentsMax: 6000,
+    reward: "* Up to $10 USDT + 2 OPENX",
+  },
+  {
+    deploymentsMin: 4001,
+    deploymentsMax: 5000,
+    reward: "* Up to $11 USDT + 3 OPENX",
+  },
+  {
+    deploymentsMin: 3001,
+    deploymentsMax: 4000,
+    reward: "* Up to $12 USDT + 3 OPENX",
+  },
+  {
+    deploymentsMin: 2001,
+    deploymentsMax: 3000,
+    reward: "* Up to $13 USDT + 3 OPENX",
+  },
+  {
+    deploymentsMin: 1001,
+    deploymentsMax: 2000,
+    reward: "* Up to $14 USDT + 5 OPENX ",
+  },
+  { deploymentsMin: 1, deploymentsMax: 1000, reward: "Genesis NFT + 5 OPENX" },
 ];
+
 export function Factory({ user }: { user: string | null }) {
   const { data: projects } = useQuery({
     queryKey: ["user_projects", user ?? ""],
@@ -78,7 +118,7 @@ export function Factory({ user }: { user: string | null }) {
         <div className="w-full max-w-[500px] rounded-md border border-black">
           <Table>
             <TableHeader>
-              <TableHead>No. Deployments</TableHead>
+              <TableHead>App No.</TableHead>
               <TableHead>Reward</TableHead>
             </TableHeader>
             <TableBody>
@@ -88,18 +128,18 @@ export function Factory({ user }: { user: string | null }) {
                   className={cn(
                     "text-muted-foreground",
                     totalProjects !== undefined &&
-                      totalProjects > reward.deployments &&
+                      totalProjects > reward.deploymentsMax &&
                       "text-black",
                     totalProjects !== undefined &&
-                      totalProjects < reward.deployments &&
-                      totalProjects + 1000 > reward.deployments &&
+                      totalProjects < reward.deploymentsMax &&
+                      totalProjects > reward.deploymentsMin &&
                       "bg-blue-700 text-white"
                   )}
                 >
                   <TableCell>
                     <div className="flex gap-3 place-items-center">
                       {totalProjects !== undefined &&
-                      totalProjects > reward.deployments ? (
+                      totalProjects > reward.deploymentsMin ? (
                         <div className="rounded-full p-1 bg-green-600">
                           <Check className="size-4 text-white" />
                         </div>
@@ -108,17 +148,23 @@ export function Factory({ user }: { user: string | null }) {
                           <LockIcon className="size-4 text-white" />
                         </div>
                       )}
-                      <span>{reward.deployments.toLocaleString("en-us")}</span>
+                      <span>
+                        {reward.deploymentsMin}-{reward.deploymentsMax}
+                      </span>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <span>${reward.reward.toLocaleString("en-us")}</span>
+                    <span>{reward.reward}</span>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </div>
+        <span className="max-w-[500px] text-center text-muted-foreground text-sm">
+          * Depending on the level at the end of the campaign, maximum rewards
+          are paid out if 10000 mini apps are deployed
+        </span>
       </div>
       {projects && projects.length > 0 ? (
         <Link href="/factory/me">
