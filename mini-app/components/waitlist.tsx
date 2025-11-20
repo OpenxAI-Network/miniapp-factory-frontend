@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useAddress } from "@/hooks/useAddress";
-import { CheckCircle2, X } from "lucide-react";
+import { CheckCircle2, Info, X } from "lucide-react";
 import { Spinner } from "./ui/spinner";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
@@ -18,6 +18,7 @@ import { DataTablePagination } from "./ui/data-table-pagination";
 import { checksumAddress } from "viem";
 import Link from "next/link";
 import { useEffect } from "react";
+import { Alert, AlertTitle, AlertDescription } from "./ui/alert";
 
 interface PublicWaitlist {
   account: string;
@@ -160,54 +161,10 @@ export function Waitlist() {
       {waitlistPosition !== undefined &&
         (waitlistPosition === 0 ? (
           <>
-            <div className="flex flex-col place-items-center gap-1">
-              <div className="flex place-items-center gap-2">
-                <span>Anti Spam Check</span>
-                {waitlistAllowed === undefined ? (
-                  <Spinner />
-                ) : waitlistAllowed ? (
-                  <CheckCircle2 className="text-green-600" />
-                ) : (
-                  <X className="text-red-600" />
-                )}
-              </div>
-              {waitlistAllowed === false && (
-                <span className="text-red-600 text-center">
-                  Someone else already subscribed on this network. Please
-                  subscribe on a unique network, e.g. by using mobile data.
-                </span>
-              )}
-            </div>
-            <Button
-              onClick={() => {
-                fetch(`/api/waitlist/${address}/enroll`, {
-                  method: "POST",
-                }).then((res) => {
-                  if (res.status === 400) {
-                    toast(
-                      "Couldn't detect ip address, please try on a different network.",
-                      { className: "bg-red-600 border-red-600" }
-                    );
-                  }
-                  if (res.status === 403) {
-                    toast("Network or account already used in subscription.", {
-                      className: "bg-red-600 border-red-600",
-                    });
-                  }
-                  if (res.status === 500) {
-                    toast("An unknown error occurred.", {
-                      className: "bg-red-600 border-red-600",
-                    });
-                  }
-
-                  refetchWaitlistPosition();
-                  refetchPublicWaitlist();
-                });
-              }}
-              disabled={waitlistAllowed !== true}
-            >
-              Subscribe
-            </Button>
+            <Alert className="max-w-[500px] max-md:max-w-screen">
+              <Info />
+              <AlertTitle>Waitlist Closed</AlertTitle>
+            </Alert>
           </>
         ) : (
           <>
