@@ -3,23 +3,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "./ui/button";
 import { ArrowLeft, FactoryIcon } from "lucide-react";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
-import { Input } from "./ui/input";
 import { useState } from "react";
-import { Label } from "./ui/label";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ScrollArea } from "./ui/scroll-area";
 import { ProjectShowcase } from "./project-showcase";
+import { CreateProject } from "./create-project";
 
 export function Me({ user }: { user: string | null }) {
   const { data: projects } = useQuery({
@@ -33,20 +21,7 @@ export function Me({ user }: { user: string | null }) {
     },
   });
 
-  const [projectName, setProjectName] = useState<string>("");
-  const [creatingProject, setCreatingProject] = useState<boolean>(false);
-  const router = useRouter();
-
-  const { data: projectAvailable } = useQuery({
-    queryKey: ["projectAvailable", projectName ?? ""],
-    enabled: !!projectName,
-    queryFn: async () => {
-      return fetch(`/api/factory/project/available?project=${projectName}`)
-        .then((res) => res.json())
-        .then((data) => data as boolean)
-        .catch(console.error);
-    },
-  });
+  const [createProject, setCreateProject] = useState<boolean>(false);
 
   return (
     <main className="flex flex-col gap-3 place-items-center place-content-between px-4 py-4 grow">
@@ -78,82 +53,15 @@ export function Me({ user }: { user: string | null }) {
           </div>
         </ScrollArea>
       </div>
-      <Dialog>
-        <DialogTrigger>
-          <Button className="bg-blue-700 text-white text-lg rounded-3xl px-12 py-7">
-            Create New App
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="text-xl">Create new mini app</DialogTitle>
-            <DialogDescription>
-              Your mini app can be accessed through https://
-              {"{name}"}
-              .miniapp-factory.marketplace.openxai.network. The name cannot be
-              changed afterward.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex flex-col gap-1">
-            <Label htmlFor="miniapp-project-name" className="ml-3">
-              Mini App Name
-            </Label>
-            <Input
-              id="miniapp-project-name"
-              className="rounded-2xl"
-              aria-invalid={
-                !new RegExp(/^[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?$/).test(
-                  projectName
-                ) || projectAvailable === false
-              }
-              value={projectName}
-              onChange={(e) =>
-                setProjectName(e.target.value.toLowerCase().replace(" ", "-"))
-              }
-            />
-          </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button
-                className="rounded-3xl h-auto py-3 px-6"
-                variant="outline"
-              >
-                Cancel
-              </Button>
-            </DialogClose>
-            <Button
-              className="rounded-3xl h-auto py-3 px-6 bg-blue-700"
-              onClick={() => {
-                setCreatingProject(true);
-                fetch("/api/factory/project/create", {
-                  method: "POST",
-                  headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({ project: projectName }),
-                })
-                  .then((res) => {
-                    if (res.ok) {
-                      router.push(`/factory/project/${projectName}`);
-                    }
-                  })
-                  .catch(console.error)
-                  .finally(() => setCreatingProject(false));
-              }}
-              disabled={
-                creatingProject ||
-                !new RegExp(/^[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?$/).test(
-                  projectName
-                ) ||
-                projectAvailable === false
-              }
-            >
-              Create
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <Button
+        className="bg-blue-700 text-white text-lg rounded-3xl px-12 py-7"
+        onClick={() => setCreateProject(true)}
+      >
+        Create New App
+      </Button>
+      {createProject && (
+        <CreateProject user={user} close={() => setCreateProject(false)} />
+      )}
     </main>
   );
 }
