@@ -181,14 +181,14 @@ export function CreditsPayment({
                       Purchase OPENX
                     </Button>
                   ) : (
-                    <Link
-                      href={`https://app.uniswap.org/explore/tokens/base/${tokenAddress}`}
-                      target="_blank"
-                    >
-                      <Button className="rounded-lg bg-blue-700">
+                    <Button className="rounded-lg bg-blue-700" asChild>
+                      <Link
+                        href={`https://app.uniswap.org/explore/tokens/base/${tokenAddress}`}
+                        target="_blank"
+                      >
                         Purchase OPENX
-                      </Button>
-                    </Link>
+                      </Link>
+                    </Button>
                   )
                 ) : (
                   <Button
