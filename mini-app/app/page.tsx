@@ -48,7 +48,7 @@ export default function HomePage() {
             <AlertTitle>Factory Closed</AlertTitle>
             <AlertDescription>
               Please look forward to the grand re-opening of the factory on 20
-              November!
+              November 2PM UTC!
             </AlertDescription>
           </Alert>
           <div className="flex gap-4 max-md:flex-col">
