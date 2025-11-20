@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Info } from "lucide-react";
 import { Footer } from "@/components/footer";
+import { Share } from "@/components/share";
 
 export const dynamic = "force-dynamic";
 

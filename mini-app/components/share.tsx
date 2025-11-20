@@ -20,7 +20,7 @@ export function Share({ text }: { text: string }) {
 
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button
           className="flex place-items-center gap-2 h-auto py-4 has-[>svg]:px-8 px-8 rounded-3xl"
           variant="outline"
