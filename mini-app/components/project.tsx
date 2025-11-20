@@ -12,6 +12,7 @@ import {
   FactoryIcon,
   Hourglass,
   Joystick,
+  Lightbulb,
   Pencil,
   Rocket,
   X,
@@ -36,6 +37,14 @@ import { AccountAssociation } from "./account-association";
 import { BaseBuild } from "./base-build";
 import { Share } from "./share";
 import { Skeleton } from "./ui/skeleton";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
 
 export interface Deployment {
   id: number;
@@ -465,7 +474,49 @@ export function Project({ project }: { project: string }) {
               </div>
             </Link>
           </div>
-          <span className="text-5xl font-semibold">Build Your App!</span>
+          <div className="flex place-content-center place-items-center gap-2">
+            <span className="text-5xl font-semibold">Build Your App!</span>
+            <Dialog>
+              <DialogTrigger>
+                <div className="p-2 rounded-full bg-gray-400">
+                  <Lightbulb />
+                </div>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Tips for building apps</DialogTitle>
+                  <DialogDescription>Do and Don&apos;ts</DialogDescription>
+                </DialogHeader>
+                <div className="flex flex-col gap-2 place-items-center place-content-center">
+                  <span>
+                    - Keep your description as focused as possible. Try to
+                    create something using multiple iterations instead of in one
+                    go.
+                  </span>
+                  <span>
+                    - The AI is not able to access the internet, for the best
+                    results you should include all required information in your
+                    description.
+                  </span>
+                  <span>
+                    - The AI is not able to install any external dependencies,
+                    for the best results, only use common website elements (e.g.
+                    buttons, dialogs, etc.) in your idea.
+                  </span>
+                  <span>
+                    - Web3 integration is planned for a later stage. Due to the
+                    sensitive nature of interacting with smart contracts, it has
+                    to be bullet proof.
+                  </span>
+                  <span>
+                    - We recommend pushing the AI to the limit in app
+                    complexity, but codeless development is still recent
+                    technology, so expect the AI to make mistakes.
+                  </span>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
           {lastDeployment !== undefined && (
             <Button
               className="flex whitespace-normal"
