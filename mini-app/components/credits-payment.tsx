@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import {
-  AlertTriangle,
   CheckCircle2,
   CircleDollarSign,
   Hourglass,
@@ -16,7 +15,6 @@ import {
   useWriteContract,
 } from "wagmi";
 
-import { Alert, AlertTitle } from "./ui/alert";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -31,6 +29,8 @@ import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import { toast } from "sonner";
 import { useAppKit } from "@reown/appkit/react";
+import { useMiniAppContext } from "./context/miniapp-provider";
+import Link from "next/link";
 
 export function CreditsPayment({
   user,
@@ -67,13 +67,14 @@ export function CreditsPayment({
   const [step, setStep] = useState<"buy" | "wait" | "confirm">("buy");
 
   const tokenAddress = "0xA66B448f97CBf58D12f00711C02bAC2d9EAC6f7f" as const;
-  const { data: balance } = useReadContract({
+  const { data: balance, refetch: refetchBalance } = useReadContract({
     abi: erc20Abi,
     address: tokenAddress,
     functionName: "balanceOf",
     args: [address as Address],
     query: {
       enabled: !!address,
+      refetchInterval: 2_000, // 2 seconds
     },
   });
 
@@ -85,6 +86,7 @@ export function CreditsPayment({
   const publicClient = usePublicClient();
 
   const { open } = useAppKit();
+  const { sdk, isInMiniApp } = useMiniAppContext();
 
   return (
     <Dialog
@@ -145,16 +147,6 @@ export function CreditsPayment({
                 <span>You will be charged</span>
                 <span>{topUp} OPENX</span>
               </div>
-              {balance !== undefined &&
-                balance < BigInt(topUp) * BigInt(1_000_000) && (
-                  <Alert variant="destructive">
-                    <AlertTriangle />
-                    <AlertTitle className=" leading-6">
-                      Insufficient OPENX balance for account {address}
-                    </AlertTitle>
-                    <Button>Buy OPENX</Button>
-                  </Alert>
-                )}
             </div>
           )}
         </div>
@@ -171,50 +163,75 @@ export function CreditsPayment({
                 >
                   Cancel
                 </Button>
-                <Button
-                  className="rounded-lg bg-blue-700"
-                  onClick={() => {
-                    if (!address) {
-                      open();
-                      return;
-                    }
-
-                    setPerformingTransaction(true);
-                    writeContractAsync({
-                      abi: erc20Abi,
-                      address: tokenAddress,
-                      functionName: "transfer",
-                      args: [
-                        "0xC96d00a5e1d03b719ADD5A855ba84d05561D9897",
-                        BigInt(topUp) * BigInt(1_000_000),
-                      ],
-                    })
-                      .then((tx) => {
-                        setStep("wait");
-                        publicClient
-                          ?.waitForTransactionReceipt({ hash: tx })
+                {balance !== undefined &&
+                balance < BigInt(topUp) * BigInt(10) ** BigInt(18) ? (
+                  isInMiniApp ? (
+                    <Button
+                      className="rounded-lg bg-blue-700"
+                      onClick={() => {
+                        sdk.actions
+                          .swapToken({
+                            buyToken: `eip155:8453/erc20:${tokenAddress}`,
+                          })
                           .then(() => {
-                            setStep("confirm");
-                            new Promise((resolve) =>
-                              setTimeout(resolve, 3_000)
-                            ).then(() => {
-                              refetchCredits();
-                              setStep("buy");
-                              close(true);
-                            });
+                            refetchBalance();
                           });
+                      }}
+                    >
+                      Purchase OPENX
+                    </Button>
+                  ) : (
+                    <Link
+                      href={`https://app.uniswap.org/explore/tokens/base/${tokenAddress}`}
+                      target="_blank"
+                    >
+                      <Button className="rounded-lg bg-blue-700">
+                        Purchase OPENX
+                      </Button>
+                    </Link>
+                  )
+                ) : (
+                  <Button
+                    className="rounded-lg bg-blue-700"
+                    onClick={() => {
+                      if (!address) {
+                        open();
+                        return;
+                      }
+
+                      setPerformingTransaction(true);
+                      writeContractAsync({
+                        abi: erc20Abi,
+                        address: tokenAddress,
+                        functionName: "transfer",
+                        args: [
+                          "0xC96d00a5e1d03b719ADD5A855ba84d05561D9897",
+                          BigInt(topUp) * BigInt(10) ** BigInt(18),
+                        ],
                       })
-                      .catch(console.error)
-                      .finally(() => setPerformingTransaction(false));
-                  }}
-                  disabled={
-                    performingTransaction ||
-                    (balance !== undefined &&
-                      balance < BigInt(topUp) * BigInt(1_000_000))
-                  }
-                >
-                  Purchase Credits
-                </Button>
+                        .then((tx) => {
+                          setStep("wait");
+                          publicClient
+                            ?.waitForTransactionReceipt({ hash: tx })
+                            .then(() => {
+                              setStep("confirm");
+                              new Promise((resolve) =>
+                                setTimeout(resolve, 3_000)
+                              ).then(() => {
+                                refetchCredits();
+                                setStep("buy");
+                                close(true);
+                              });
+                            });
+                        })
+                        .catch(console.error)
+                        .finally(() => setPerformingTransaction(false));
+                    }}
+                    disabled={performingTransaction}
+                  >
+                    Purchase Credits
+                  </Button>
+                )}
               </div>
               <div className="flex place-content-between place-items-center">
                 <Separator className="basis-[45%] bg-muted-foreground" />
