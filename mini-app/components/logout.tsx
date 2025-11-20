@@ -8,6 +8,7 @@ export function Logout() {
 
   return (
     <Button
+      variant="outline"
       onClick={() => {
         fetch("/xnode-auth/api/logout", { method: "POST" }).then(() =>
           push("/")

@@ -8,6 +8,7 @@ import Link from "next/link";
 import { ScrollArea } from "./ui/scroll-area";
 import { ProjectShowcase } from "./project-showcase";
 import { CreateProject } from "./create-project";
+import { Logout } from "./logout";
 
 export function Me({ user }: { user: string | null }) {
   const { data: projects } = useQuery({
@@ -39,7 +40,10 @@ export function Me({ user }: { user: string | null }) {
       </div>
       <div className="flex flex-col gap-1 mt-8 ml-4 w-full max-w-[500px]">
         <span className="text-5xl font-semibold">Hi, User</span>
-        <span className="text-sm break-all">{user}</span>
+        <div className="flex place-items-center gap-2">
+          <appkit-button />
+          <Logout />
+        </div>
       </div>
       <div className="flex flex-col gap-1 mt-4 w-full max-w-[500px] grow">
         <span className="ml-8 text-lg font-semibold">Your Mini Apps</span>
