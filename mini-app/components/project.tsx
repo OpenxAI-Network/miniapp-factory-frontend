@@ -6,6 +6,7 @@ import {
   ArrowLeft,
   Brush,
   CheckCircle,
+  ClockFading,
   Code2,
   Coins,
   ExternalLink,
@@ -39,12 +40,15 @@ import { Share } from "./share";
 import { Skeleton } from "./ui/skeleton";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
+import { ScrollArea } from "./ui/scroll-area";
+import { Separator } from "./ui/separator";
 
 export interface Deployment {
   id: number;
@@ -58,6 +62,7 @@ export interface Deployment {
   imagegen_finished_at: number | null;
   imagegen_git_hash: string | null;
   deployment_request: number | null;
+  deleted: boolean;
 }
 
 export enum Status {
@@ -187,7 +192,7 @@ export function Project({ project }: { project: string }) {
     return () => clearInterval(interval);
   }, [lastDeployment]);
 
-  const [dismissed, setDismissed] = useState<boolean>(true);
+  const [dismissed, setDismissed] = useState<boolean>(false);
 
   return (
     <main className="flex flex-col gap-3 place-items-center place-content-between px-4 py-4 grow">
@@ -459,9 +464,117 @@ export function Project({ project }: { project: string }) {
             <BaseBuild project={project} />
             <AccountAssociation project={project} />
           </div>
-          <Share
-            text={`Check out my new app built with the OpenxAI #MiniAppFactory! https://${project}.miniapp-factory.marketplace.openxai.network/`}
-          />
+          <div className="flex place-items-center place-content-center gap-2">
+            <Dialog>
+              <DialogTrigger>
+                <Button
+                  className="flex place-items-center gap-2 h-auto py-4 has-[>svg]:px-8 px-8 rounded-3xl"
+                  variant="outline"
+                >
+                  <ClockFading />
+                  <span className="text-lg">History</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle className="text-xl">History</DialogTitle>
+                  <DialogDescription>
+                    View and reset your app to a previous version. Resetting to
+                    a previous version PERMANENTLY deletes all changes made
+                    after that version. A reset cannot be undone.
+                  </DialogDescription>
+                </DialogHeader>
+                <ScrollArea className="h-full max-h-[500px]">
+                  <div className="flex flex-col gap-3">
+                    {history
+                      ?.map((version) => version)
+                      .reverse()
+                      .map((version, i) => {
+                        const description = version.instructions
+                          .replace("Code the following app\n```\n", "")
+                          .replace(
+                            "\n```\n\nGenerate an app logo and update the app metadata title and description.",
+                            ""
+                          );
+                        return (
+                          <>
+                            <div className="flex flex-col gap-2">
+                              <span>
+                                {new Date(
+                                  version.submitted_at * 1000
+                                ).toLocaleString()}
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                {description.substring(0, 200)}
+                                {description.length > 200 ? "..." : ""}
+                              </span>
+                              {i === 0 ? (
+                                <Button disabled>Current Version</Button>
+                              ) : (
+                                <DialogClose asChild>
+                                  <Button
+                                    variant="destructive"
+                                    onClick={() => {
+                                      fetch("/api/factory/project/reset", {
+                                        method: "POST",
+                                        headers: {
+                                          Accept: "application/json",
+                                          "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify({
+                                          project,
+                                          deployment: version.id,
+                                        }),
+                                      })
+                                        .then(() => refetchHistory())
+                                        .catch(console.error);
+                                    }}
+                                  >
+                                    Reset To This Version
+                                  </Button>
+                                </DialogClose>
+                              )}
+                            </div>
+                            <Separator />
+                          </>
+                        );
+                      })}
+                    <div className="flex flex-col gap-2">
+                      <span>Project Creation</span>
+                      <span className="text-xs text-muted-foreground">
+                        The project before you entered your first project
+                        description.
+                      </span>
+                      <DialogClose asChild>
+                        <Button
+                          variant="destructive"
+                          onClick={() => {
+                            fetch("/api/factory/project/reset", {
+                              method: "POST",
+                              headers: {
+                                Accept: "application/json",
+                                "Content-Type": "application/json",
+                              },
+                              body: JSON.stringify({
+                                project,
+                              }),
+                            })
+                              .then(() => refetchHistory())
+                              .catch(console.error);
+                          }}
+                        >
+                          Reset To Empty Project
+                        </Button>
+                      </DialogClose>
+                    </div>
+                  </div>
+                </ScrollArea>
+              </DialogContent>
+            </Dialog>
+            <Share
+              text={`Check out my new app built with the OpenxAI #MiniAppFactory! https://${project}.miniapp-factory.marketplace.openxai.network/`}
+            />
+          </div>
         </>
       ) : (
         <>
