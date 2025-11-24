@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ScrollArea } from "./ui/scroll-area";
 import { ViewMiniApp } from "./view-miniapp";
 
-const featured: string[] = [];
+const featured: string[] = ["2d-to-3d-printer", "pong", "base-crash"];
 
 export function Marketplace() {
   const { data: projects } = useQuery({
