@@ -106,7 +106,7 @@ export function Project({ project }: { project: string }) {
   });
 
   const status = !lastDeployment
-    ? undefined
+    ? Status.deployed
     : lastDeployment.imagegen_finished_at !== null
     ? deploymentRequest === undefined
       ? Status.unknown
@@ -383,12 +383,12 @@ export function Project({ project }: { project: string }) {
               </div>
             </Link>
             <div
-              className="p-2 rounded-full bg-gray-400"
+              className="px-4 py-2 rounded-xl bg-gray-400"
               onClick={() => {
                 setDismissed(true);
               }}
             >
-              <X />
+              <span>Edit</span>
             </div>
           </div>
           {status === Status.deployed ? (

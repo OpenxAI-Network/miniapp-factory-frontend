@@ -59,6 +59,15 @@ export function Me({ user }: { user: string | null }) {
         </ScrollArea>
       </div>
       <Button
+        className="text-lg rounded-3xl px-10 py-7"
+        variant="outline"
+        asChild
+      >
+        <Link href="https://forms.gle/EK3TT8oaZ39qYSwm8" target="_blank">
+          Feedback
+        </Link>
+      </Button>
+      <Button
         className="bg-blue-700 text-white text-lg rounded-3xl px-12 py-7"
         onClick={() => setCreateProject(true)}
       >
