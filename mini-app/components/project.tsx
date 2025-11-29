@@ -106,7 +106,7 @@ export function Project({ project }: { project: string }) {
   });
 
   const status = !lastDeployment
-    ? Status.deployed
+    ? undefined
     : lastDeployment.imagegen_finished_at !== null
     ? deploymentRequest === undefined
       ? Status.unknown
